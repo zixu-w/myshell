@@ -4,7 +4,7 @@ BINDIR := bin
 MYSHELL_SRC := $(wildcard src/*.c)
 MYSHELL_OBJ := $(MYSHELL_SRC:.c=.o)
 TESTDIR := test
-TEST_SRC := $(TESTDIR/*.c)
+TEST_SRC := $(wildcard $(TESTDIR)/*.c)
 TEST_OBJ := $(TEST_SRC:.c=.o)
 
 MYSHELL := $(BINDIR)/myshell
