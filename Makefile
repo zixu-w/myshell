@@ -1,21 +1,26 @@
 .PHONY : clean test run
 
-BINDIR = bin
-TESTDIR = test
-compile = gcc -o $(BINDIR)/$@ $<
+BINDIR := bin
+SRCDIR := src
+TESTDIR := test
 
-vpath %.c src
-vpath %.h src
-vpath %.in test
+MYSHELL := $(BINDIR)/myshell
+TEST := $(BINDIR)/test
 
-myshell : myshell.c
-	@$(compile)
+myshell : $(MYSHELL)
+test : $(TEST)
 
-test : test.c test.in
-	@$(compile); ./$(BINDIR)/$@ <$(TESTDIR)/test.in >$(TESTDIR)/test.out
+$(MYSHELL) : $(SRCDIR)/myshell.c | $(BINDIR)
+	$(CC) -o $@ $<
 
-run : myshell
-	@./$(BINDIR)/myshell
+$(TEST) : $(SRCDIR)/test.c $(TESTDIR)/test.in | $(BINDIR)
+	$(CC) -o $@ $<; ./$@ <$(TESTDIR)/test.in >$(TESTDIR)/test.out
+
+$(BINDIR) :
+	mkdir $@
+
+run : $(MYSHELL)
+	./$(MYSHELL)
 
 clean :
-	@rm -rf $(BINDIR)/*
+	$(RM) $(BINDIR)/*

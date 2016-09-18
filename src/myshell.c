@@ -2,6 +2,6 @@
 #include <stdlib.h>
 
 int main(int argc, char const *argv[]) {
-  printf("This shell does nothing.\n");
+  printf("## myshell $\n");
   return 0;
 }
