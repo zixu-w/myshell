@@ -1,7 +1,7 @@
 .PHONY : clean test run
 
-BINDIR = bin
-TESTDIR = test
+BINDIR = ./bin
+TESTDIR = ./test
 compile = gcc -o $(BINDIR)/$@ $<
 
 vpath %.c src
