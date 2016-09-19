@@ -14,7 +14,7 @@ myshell : $(MYSHELL)
 test : $(TEST)
 
 $(MYSHELL) : $(MYSHELL_OBJ) | $(BINDIR)
-	$(CC) -o $@ $^
+	$(CC) -o $@ $^ -ggdb
 
 $(TEST) : $(TEST_OBJ) | $(BINDIR) $(TESTDIR)/test.in
 	$(CC) -o $@ $^; ./$@ <$(TESTDIR)/test.in >$(TESTDIR)/test.out
@@ -23,7 +23,7 @@ $(BINDIR) :
 	mkdir $@
 
 %.o : %.c
-	$(CC) -c -o $@ $^
+	$(CC) -c -o $@ $^ -ggdb
 
 run : $(MYSHELL)
 	./$(MYSHELL)

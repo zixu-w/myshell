@@ -2,6 +2,9 @@
 #include <stdlib.h>
 
 #include "readline.h"
+#include "signals.h"
+
+extern int flag;
 
 char* readline() {
   char* buffer = (char*)malloc(sizeof(char) * BUFFER_SIZE);
@@ -9,8 +12,10 @@ char* readline() {
     fprintf(stderr, "myshell: fail to allocate buffer.\n");
     exit(EXIT_FAILURE);
   }
-  int c, pos = 0;
-  while (1) {
+  char c;
+  int pos = 0;
+  flag = 1;
+  while (flag) {
     c = getchar();
     if (c == EOF || c == '\n') {
       buffer[pos] = '\0';
@@ -23,4 +28,5 @@ char* readline() {
       exit(EXIT_FAILURE);
     }
   }
+  return NULL;
 }
