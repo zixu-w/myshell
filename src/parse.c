@@ -4,6 +4,8 @@
 
 #include "parse.h"
 
+int pos;
+
 char** split(char* line) {
   char** tokens = (char**)malloc(ARGV_SIZE*sizeof(char*));
   if (tokens == NULL) {
@@ -12,7 +14,7 @@ char** split(char* line) {
   }
   char* saveptr;
   char* token = strtok_r(line, DELIMINATOR, &saveptr);
-  int pos = 0;
+  pos = 0;
   while (token != NULL) {
     if (pos >= ARGV_SIZE) {
       fprintf(stderr, "myshell: token buffer overflow, max 30 tokens.\n");
@@ -30,7 +32,11 @@ Command_t** parse(char** tokens) {
   Command_t command;
   memset(&command, 0, sizeof(Command_t));
   command.cmd = tokens[0];
-  command.bg_flag = 0;
+  if (strcmp(tokens[pos-1], "&") == 0) {
+    tokens[--pos] = NULL;
+    command.bg_flag = 1;
+  } else
+    command.bg_flag = 0;
   command.argv = tokens;
   commands[0] = &command;
   commands[1] = NULL;
