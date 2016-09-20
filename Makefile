@@ -29,7 +29,7 @@ run : $(MYSHELL)
 	./$(MYSHELL)
 
 clean :
-	$(RM) $(MYSHELL_OBJ) $(TEST_OBJ)
+	$(RM) $(MYSHELL_OBJ) $(TEST_OBJ) *.o
 
 fclean : clean
 	$(RM) $(MYSHELL) $(TEST)

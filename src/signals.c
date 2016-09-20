@@ -1,12 +1,13 @@
 #include <signal.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "signals.h"
 
 extern int flag;
 
 void sighandler(int signum) {
-  flag = 0;
+  // TODO
 }
 
 void registerSighandler() {

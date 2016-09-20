@@ -13,19 +13,20 @@ int launch(Command_t** commands) {
   if (pid == 0) {
     if (execvp(command.cmd, command.argv) == -1) {
       perror("myshell");
-      //free(commands);
-      return -1;
+      exit(EXIT_FAILURE);
     }
   } else if (pid < 0) {
     perror("myshell");
-    //free(commands);
-    return -1;
-  } else {
-    int options = 0;
-    if (command.bg_flag)
-      options |= WNOHANG;
-    //free(commands);
-    waitpid(pid, &status, options);
-    return WIFEXITED(status);
+    exit(EXIT_FAILURE);
   }
+  int options = 0;
+  if (command.bg_flag)
+    options |= WNOHANG;
+  int i;
+  for (i = 0; commands[i] != NULL; ++i) {
+    free(commands[i]->argv);
+  }
+  free(commands);
+  waitpid(pid, &status, options);
+  return WIFEXITED(status);
 }

@@ -4,8 +4,6 @@
 #include "readline.h"
 #include "signals.h"
 
-extern int flag;
-
 char* readline() {
   char* buffer = (char*)malloc(sizeof(char) * BUFFER_SIZE);
   if (buffer == NULL) {
@@ -14,10 +12,11 @@ char* readline() {
   }
   char c;
   int pos = 0;
-  flag = 1;
-  while (flag) {
+  while (1) {
     c = getchar();
     if (c == EOF || c == '\n') {
+      if (c == EOF)
+        printf("\n");
       buffer[pos] = '\0';
       return buffer;
     } else {
@@ -28,5 +27,4 @@ char* readline() {
       exit(EXIT_FAILURE);
     }
   }
-  return NULL;
 }

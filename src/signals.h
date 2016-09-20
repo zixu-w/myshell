@@ -3,8 +3,6 @@
 
 #include <signal.h>
 
-int flag;
-
 void sighandler(int);
 void registerSighandler(void);
 
