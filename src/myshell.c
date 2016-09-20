@@ -14,7 +14,8 @@ int main(int argc, char const *argv[]) {
   while (1) {
     printf("## myshell $ ");
     input = readline();
-    launch(parse(split(input)));
+    if (input != NULL)
+      launch(parse(split(input)));
     free(input);
   }
   return EXIT_SUCCESS;
