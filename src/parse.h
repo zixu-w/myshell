@@ -1,7 +1,6 @@
 #ifndef _PARSE_H
 #define _PARSE_H
 
-#include "command.h"
 #include "jobs.h"
 
 #define TOK_DELIMINATOR " \t\r\n\a"

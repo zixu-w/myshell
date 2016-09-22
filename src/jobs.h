@@ -2,7 +2,6 @@
 #define _JOBS_H
 
 #include <unistd.h>
-#include "command.h"
 
 typedef struct Process {
   struct Process* next;
