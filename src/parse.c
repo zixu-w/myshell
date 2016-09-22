@@ -4,41 +4,83 @@
 
 #include "parse.h"
 
-int pos;
-
-char** split(char* line) {
-  char** tokens = (char**)malloc(ARGV_SIZE*sizeof(char*));
-  if (tokens == NULL) {
-    fprintf(stderr, "myshell: fail to allocate token buffer.\n");
-    exit(EXIT_FAILURE);
+Job* parse(char* line) {
+  if (line == NULL || strcmp(line, "") == 0)
+    return NULL;
+  Job* j = (Job*)malloc(sizeof(Job));
+  memset(j, 0, sizeof(Job));
+  j->stdin = STDIN_FILENO;
+  j->stdout = STDOUT_FILENO;
+  char** cmds = (char**)malloc((CMD_SIZE+1)*sizeof(char*));
+  if (cmds == NULL) {
+    fprintf(stderr, "myshell: fail to allocate command buffer.\n");
+    free(j);
+    return NULL;
   }
-  char* saveptr;
-  char* token = strtok_r(line, DELIMINATOR, &saveptr);
-  pos = 0;
-  while (token != NULL) {
-    if (pos >= ARGV_SIZE) {
-      fprintf(stderr, "myshell: token buffer overflow, max 30 tokens.\n");
-      exit(EXIT_FAILURE);
+  int cmdSize = 0;
+  char* cmd = strtok(line, CMD_DELIMINATOR);
+  while (cmd != NULL) {
+    if (cmdSize >= CMD_SIZE) {
+      fprintf(stderr, "myshell: command buffer overflow, max %d commands.\n", CMD_SIZE);
+      free(j);
+      free(cmds);
+      return NULL;
     }
-    tokens[pos++] = token;
-    token = strtok_r(NULL, DELIMINATOR, &saveptr);
+    cmds[cmdSize++] = cmd;
+    cmd = strtok(NULL, CMD_DELIMINATOR);
   }
-  tokens[pos] = NULL;
-  return tokens;
-}
-
-Command_t** parse(char** tokens) {
-  Command_t** commands = (Command_t**)malloc(CMD_SIZE*sizeof(Command_t*));
-  Command_t command;
-  memset(&command, 0, sizeof(Command_t));
-  command.cmd = tokens[0];
-  if (strcmp(tokens[pos-1], "&") == 0) {
-    tokens[--pos] = NULL;
-    command.bg_flag = 1;
-  } else
-    command.bg_flag = 0;
-  command.argv = tokens;
-  commands[0] = &command;
-  commands[1] = NULL;
-  return commands;
+  cmds[cmdSize] = NULL;
+  Process* head = NULL;
+  Process* prev = NULL;
+  int i;
+  for (i = 0; i < cmdSize; ++i) {
+    cmd = cmds[i];
+    char** tokens = (char**)malloc((ARGV_SIZE+1)*sizeof(char*));
+    if (tokens == NULL) {
+      fprintf(stderr, "myshell: fail to allocate token buffer.\n");
+      free(j);
+      free(cmds);
+      return NULL;
+    }
+    int tokSize = 0;
+    char* token = strtok(cmd, TOK_DELIMINATOR);
+    while (token != NULL) {
+      if (tokSize >= ARGV_SIZE) {
+        fprintf(stderr, "myshell: token buffer overflow, max %d tokens.\n", ARGV_SIZE);
+        free(j);
+        free(cmds);
+        free(tokens);
+        return NULL;
+      }
+      tokens[tokSize++] = token;
+      token = strtok(NULL, TOK_DELIMINATOR);
+    }
+    if (tokSize >= 1 && strcmp(tokens[tokSize-1], "&") == 0) {
+      if (cmds[i+1] != NULL) {
+        fprintf(stderr, "myshell: '&' should not appear in the middle of the command line\n");
+        free(j);
+        free(cmds);
+        free(tokens);
+        return NULL;
+      }
+      j->bg = 1;
+      tokens[--tokSize] = NULL;
+    } else
+      tokens[tokSize] = NULL;
+    Process* p = (Process*)malloc(sizeof(Process));
+    memset(p, 0, sizeof(Process));
+    p->argv = (char**)malloc(tokSize*sizeof(char*));
+    int j;
+    for (j = 0; j < tokSize; ++j)
+      p->argv[j] = tokens[j];
+    if (head == NULL) {
+      head = p;
+      prev = p;
+    } else {
+      prev->next = p;
+      prev = p;
+    }
+  }
+  j->head = head;
+  return j;
 }

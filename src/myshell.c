@@ -15,7 +15,7 @@ int main(int argc, char const *argv[]) {
     printf("## myshell $ ");
     input = readline();
     if (input != NULL && strcmp(input, ""))
-      launch(parse(split(input)));
+      launchJob(parse(input));
     free(input);
   }
   //return EXIT_SUCCESS;

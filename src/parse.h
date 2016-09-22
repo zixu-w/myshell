@@ -2,12 +2,13 @@
 #define _PARSE_H
 
 #include "command.h"
+#include "jobs.h"
 
-#define DELIMINATOR " \t\r\n\a"
+#define TOK_DELIMINATOR " \t\r\n\a"
+#define CMD_DELIMINATOR "|"
 #define ARGV_SIZE 30
 #define CMD_SIZE 5
 
-char** split(char*);
-Command_t** parse(char**);
+Job* parse(char*);
 
 #endif
