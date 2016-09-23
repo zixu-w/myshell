@@ -63,7 +63,7 @@ Job* parse(char* line) {
         free(tokens);
         return NULL;
       }
-      j->bg = 1;
+      j->bg = WNOHANG;
       tokens[--tokSize] = NULL;
     } else
       tokens[tokSize] = NULL;

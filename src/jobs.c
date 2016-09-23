@@ -47,38 +47,62 @@ int launchJob(Job* j) {
   if (j == NULL)
     return -1;
   program_invocation_name = program_invocation_short_name;
-  Process* p;
+  Process* p = j->head;
   pid_t pid;
-  int mypipe[2] = {0}, in, out, status;
-  in = j->stdin;
-  for (p = j->head; p; p = p->next) {
-    if (p->next) {
-      if (pipe(mypipe) < 0)
-        error(EXIT_FAILURE, errno, "pipe");
-      out = mypipe[1];
-    } else
-      out = j->stdout;
+  int status;
+  if (p->next != NULL) {
+    int mypipe[2], in, out;
+    in = j->stdin;
+    pid_t fpid = fork();
+    if (fpid == 0) {
+      for (; p; p = p->next) {
+        if (p->next) {
+          if (pipe(mypipe) < 0)
+            error(EXIT_FAILURE, errno, "pipe");
+          out = mypipe[1];
+        } else
+          out = j->stdout;
+        builtin_func_ptr builtin = map(p->argv[0]);
+        if (builtin != NULL)
+          return builtin(p->argv);
+        pid = fork();
+        if (pid == 0)
+          launchProcess(p, j->pgid, in, out);
+        else if (pid < 0)
+          error(EXIT_FAILURE, errno, "fork");
+        else {
+          p->pid = pid;
+          waitpid(pid, &status, 0);
+          exit(WEXITSTATUS(status));
+        }
+        if (in != j->stdin)
+          close(in);
+        if (out != j->stdout)
+          close(out);
+        in = mypipe[0];
+      }
+    } else if (fpid < 0)
+      error(EXIT_FAILURE, errno, "fork");
+    else {
+      j->pgid = fpid;
+      waitpid(fpid, &status, 0);
+      return WEXITSTATUS(status);
+    }
+  } else {
     builtin_func_ptr builtin = map(p->argv[0]);
     if (builtin != NULL)
       return builtin(p->argv);
     pid = fork();
     if (pid == 0)
-      launchProcess(p, j->pgid, in, out);
+      launchProcess(p, j->pgid, j->stdin, j->stdout);
     else if (pid < 0)
       error(EXIT_FAILURE, errno, "fork");
     else {
       p->pid = pid;
+      waitpid(pid, &status, j->bg);
+      if (!j->bg)
+        return WEXITSTATUS(status);
     }
-    if (in != j->stdin)
-      close(in);
-    if (out != j->stdout)
-      close(out);
-    in = mypipe[0];
-  }
-  p = j->head;
-  while (p != NULL) {
-    waitpid(p->pid, &status, 0);
-    p = p->next;
   }
   return 0;
 }
