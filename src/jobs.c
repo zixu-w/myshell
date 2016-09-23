@@ -6,6 +6,7 @@
 #include <sys/wait.h>
 
 #include "jobs.h"
+#include "builtin.h"
 
 extern char* program_invocation_name;
 extern char* program_invocation_short_name;
@@ -57,6 +58,9 @@ int launchJob(Job* j) {
       out = mypipe[1];
     } else
       out = j->stdout;
+    builtin_func_ptr builtin = map(p->argv[0]);
+    if (builtin != NULL)
+      return builtin(p->argv);
     pid = fork();
     if (pid == 0)
       launchProcess(p, j->pgid, in, out);

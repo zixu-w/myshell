@@ -69,10 +69,11 @@ Job* parse(char* line) {
       tokens[tokSize] = NULL;
     Process* p = (Process*)malloc(sizeof(Process));
     memset(p, 0, sizeof(Process));
-    p->argv = (char**)malloc(tokSize*sizeof(char*));
+    p->argv = (char**)malloc((tokSize+1)*sizeof(char*));
     int j;
     for (j = 0; j < tokSize; ++j)
       p->argv[j] = tokens[j];
+    p->argv[tokSize] = NULL;
     if (head == NULL) {
       head = p;
       prev = p;
