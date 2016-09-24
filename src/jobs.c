@@ -63,15 +63,22 @@ int launchJob(Job* j) {
         } else
           out = j->stdout;
         builtin_func_ptr builtin = map(p->argv[0]);
-        if (builtin != NULL)
-          return builtin(p->argv);
-        pid = fork();
-        if (pid == 0)
-          launchProcess(p, j->pgid, in, out);
-        else if (pid < 0)
-          error(EXIT_FAILURE, errno, "fork");
-        else {
-          p->pid = pid;
+        if (builtin != NULL) {
+          pid = fork();
+          if (pid == 0)
+            exit(builtin(p->argv));
+          else if (pid < 0)
+            error(EXIT_FAILURE, errno, "fork");
+          else
+            p->pid = pid;
+        } else {
+          pid = fork();
+          if (pid == 0)
+            launchProcess(p, j->pgid, in, out);
+          else if (pid < 0)
+            error(EXIT_FAILURE, errno, "fork");
+          else
+            p->pid = pid;
         }
         if (in != j->stdin)
           close(in);
@@ -79,9 +86,9 @@ int launchJob(Job* j) {
           close(out);
         in = mypipe[0];
       }
-      for (p = j->head; p; p = p->next) {
-        waitpid(p->pid, &status, 0);
-      }
+      for (p = j->head; p; p = p->next)
+        if (p->pid >= 0)
+          waitpid(p->pid, &status, 0);
       exit(WEXITSTATUS(status));
     } else if (fpid < 0)
       error(EXIT_FAILURE, errno, "fork");
