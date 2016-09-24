@@ -72,8 +72,6 @@ int launchJob(Job* j) {
           error(EXIT_FAILURE, errno, "fork");
         else {
           p->pid = pid;
-          waitpid(pid, &status, 0);
-          exit(WEXITSTATUS(status));
         }
         if (in != j->stdin)
           close(in);
@@ -81,6 +79,10 @@ int launchJob(Job* j) {
           close(out);
         in = mypipe[0];
       }
+      for (p = j->head; p; p = p->next) {
+        waitpid(p->pid, &status, 0);
+      }
+      exit(WEXITSTATUS(status));
     } else if (fpid < 0)
       error(EXIT_FAILURE, errno, "fork");
     else {
