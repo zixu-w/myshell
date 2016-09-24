@@ -8,7 +8,7 @@
 const char* keywords[] = {
   "exit",
   "cd",
-  '\0'
+  0
 };
 
 builtin_func_ptr builtins[] = {
