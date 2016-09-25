@@ -2,7 +2,7 @@ language: c
 compiler:
   - gcc
   - clang
-script: make && make testrun
+script: make && make testrun; cat test/test.out
 notifications:
   email:
     on_success: change
