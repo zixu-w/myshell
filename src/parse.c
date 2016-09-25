@@ -17,6 +17,33 @@ Job* parse(char* line) {
     free(j);
     return NULL;
   }
+  // TODO: Change parse structure.
+  // New:
+  /*
+  char** tokens = (char**)malloc((TOK_SIZE+1)*sizeof(char*));
+  if (tokens == NULL) {
+    fprintf(stderr, "myshell: fail to allocate token buffer.\n");
+    free(j);
+    free(cmds);
+    return NULL;
+  }
+  int tokSize = 0;
+  char* token = strtok(line, TOK_DELIMINATOR);
+  while (token != NULL) {
+    if (tokSize >= TOK_SIZE) {
+      fprintf(stderr, "myshell: token buffer overflow, max %d tokens.\n", TOK_SIZE);
+      free(j);
+      free(cmds);
+      free(tokens);
+      return NULL;
+    }
+    tokens[tokSize++] = token;
+    token = strtok(NULL, TOK_DELIMINATOR);
+  }
+  tokens[tokSize] = NULL;
+  */
+
+  // Old:
   int cmdSize = 0;
   char* cmd = strtok(line, CMD_DELIMINATOR);
   while (cmd != NULL) {
@@ -35,7 +62,7 @@ Job* parse(char* line) {
   int i;
   for (i = 0; i < cmdSize; ++i) {
     cmd = cmds[i];
-    char** tokens = (char**)malloc((ARGV_SIZE+1)*sizeof(char*));
+    char** tokens = (char**)malloc((TOK_SIZE+1)*sizeof(char*));
     if (tokens == NULL) {
       fprintf(stderr, "myshell: fail to allocate token buffer.\n");
       free(j);
@@ -45,8 +72,8 @@ Job* parse(char* line) {
     int tokSize = 0;
     char* token = strtok(cmd, TOK_DELIMINATOR);
     while (token != NULL) {
-      if (tokSize >= ARGV_SIZE) {
-        fprintf(stderr, "myshell: token buffer overflow, max %d tokens.\n", ARGV_SIZE);
+      if (tokSize >= TOK_SIZE) {
+        fprintf(stderr, "myshell: token buffer overflow, max %d tokens.\n", TOK_SIZE);
         free(j);
         free(cmds);
         free(tokens);

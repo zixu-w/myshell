@@ -8,15 +8,22 @@
 #include "jobs.h"
 
 int main(int argc, char const *argv[]) {
+  int echo = 0;
+  int i;
+  for (i = 1; i < argc; ++i)
+    if (!strcmp(argv[i], "--echo") || !strcmp(argv[i], "-e"))
+      echo = 1;
   setbuf(stdout, NULL);
   char* input = NULL;
   registerSighandler();
   while (1) {
     printf("## myshell $ ");
     input = readline();
-    if (input != NULL && strcmp(input, ""))
+    if (input != NULL && strcmp(input, "")) {
+      if (echo)
+        printf("%s\n", input);
       launchJob(parse(input));
+    }
     free(input);
   }
-  //return EXIT_SUCCESS;
 }

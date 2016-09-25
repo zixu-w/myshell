@@ -1,0 +1,12 @@
+ls
+ps
+ls -al
+ls - l
+ls -al | grep myshell
+ps -ef | grep myshell
+ls | ls | ls | ls | ls
+/
+.
+invalid_command_test
+exit | cd / | ls
+exit
