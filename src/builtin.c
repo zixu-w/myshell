@@ -47,6 +47,8 @@ int builtin_exit(char** argv) {
     fprintf(stderr, "myshell: \"exit\" with other arguments!!!\n");
     return EXIT_FAILURE;
   }
-  else
+  else {
+    printf("myshell: Terminated.\n");
     exit(EXIT_SUCCESS);
+  }
 }
