@@ -5,7 +5,7 @@
 
 #define TOK_DELIMINATOR " \t\r\n\a"
 #define CMD_DELIMINATOR "|"
-#define ARGV_SIZE 30
+#define TOK_SIZE 30
 #define CMD_SIZE 5
 
 Job* parse(char*);

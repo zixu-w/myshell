@@ -2,3 +2,4 @@ bin/
 *.o
 *.gch
 *.swp
+test/test.out

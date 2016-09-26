@@ -30,10 +30,10 @@ run : $(MYSHELL)
 	./$(MYSHELL)
 
 testrun: test | $(TESTDIR)/test.in
-	./$(TEST) <$(TESTDIR)/test.in 1>$(TESTDIR)/test.out 2>&1
+	./$(TEST)
 
 clean :
-	$(RM) $(MYSHELL_OBJ) $(TEST_OBJ) *.o
+	$(RM) $(MYSHELL_OBJ) $(TEST_OBJ) $(TESTDIR)/test.out *.o
 
 fclean : clean
 	$(RM) $(MYSHELL) $(TEST)
