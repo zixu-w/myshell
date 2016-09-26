@@ -20,9 +20,7 @@ typedef struct Job {
   int bg;
 } Job;
 
-Job* getJob(pid_t);
-int jobCompleted(Job*);
-void launchProcess(Process*, pid_t, int, int);
+void checkBackground();
 int launchJob(Job*);
 
 #endif

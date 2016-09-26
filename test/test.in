@@ -17,6 +17,10 @@ cat src/jobs.c | grep pid | wc -l
 ps f
 cat Makefile | wrong | ws -l
 
+ls & ls
+ls&
+ls &
+
 exit anyway
 not exit
 exit

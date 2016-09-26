@@ -12,6 +12,9 @@ extern char* program_invocation_name;
 extern char* program_invocation_short_name;
 
 Job* head = NULL;
+Job* bgList = NULL;
+
+pid_t fpgid;
 
 Job* getJob(pid_t pgid) {
   Job* j;
@@ -29,6 +32,51 @@ int jobCompleted(Job* j) {
   return 1;
 }
 
+void appendBackground(Job* bgj) {
+  if (bgList == NULL) {
+    bgList = bgj;
+    return;
+  }
+  Job* j;
+  for (j = bgList; j->next; j = j->next);
+  j->next = bgj;
+}
+
+void removeBackground(Job* bgj) {
+  if (bgList == NULL)
+    return;
+  Job* j, *prev = bgList;
+  if (bgj == bgList) {
+    j = bgj;
+    bgList = bgList->next;
+    free(j->head->argv);
+    free(j->head);
+    free(j);
+    return;
+  }
+  for (j = bgList->next; j; j = j->next) {
+    if (j == bgj) {
+      prev->next = j->next;
+      free(j->head->argv);
+      free(j->head);
+      free(j);
+      return;
+    }
+    prev = j;
+  }
+}
+
+void checkBackground() {
+  Job* j;
+  pid_t pid;
+  int status;
+  for (j = bgList; j; j = j->next)
+    if ((pid = waitpid(j->head->pid, &status, WNOHANG)) > 0) {
+      printf("[%d] %s Done\n", pid, j->head->argv[0]);
+      removeBackground(j);
+    }
+}
+
 void launchProcess(Process* p, pid_t pgid, int in, int out) {
   if (in != STDIN_FILENO) {
     dup2(in, STDIN_FILENO);
@@ -38,6 +86,7 @@ void launchProcess(Process* p, pid_t pgid, int in, int out) {
     dup2(out, STDOUT_FILENO);
     close(out);
   }
+  setpgid(0, pgid);
   if (execvp(p->argv[0], p->argv) == -1)
     error(EXIT_FAILURE, errno, "'%s'", p->argv[0]);
   exit(EXIT_FAILURE);
@@ -46,6 +95,11 @@ void launchProcess(Process* p, pid_t pgid, int in, int out) {
 int launchJob(Job* j) {
   if (j == NULL)
     return -1;
+  fpgid = getpgid(0);
+  if (j->bg)
+    j->pgid = 0;
+  else
+    j->pgid = fpgid;
   program_invocation_name = program_invocation_short_name;
   Process* p = j->head;
   pid_t pid;
@@ -111,6 +165,8 @@ int launchJob(Job* j) {
       waitpid(pid, &status, j->bg);
       if (!j->bg)
         return WEXITSTATUS(status);
+      else
+        appendBackground(j);
     }
   }
   return 0;
