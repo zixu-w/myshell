@@ -4,17 +4,14 @@
 
 #include "signals.h"
 
-extern int flag;
-
 void sighandler(int signum) {
   // TODO
 }
 
 void registerSighandler() {
   struct sigaction sa;
-  memset(&sa, 0, sizeof(struct sigaction));
+  sigaction(SIGINT, NULL, &sa);
   sa.sa_handler = sighandler;
-  sa.sa_flags = 0;
+  sa.sa_flags &= ~SA_RESTART;
   sigaction(SIGINT, &sa, NULL);
-  sigaction(SIGTERM, &sa, NULL);
 }
