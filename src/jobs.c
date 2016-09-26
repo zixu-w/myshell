@@ -42,9 +42,9 @@ void appendBackground(Job* bgj) {
   j->next = bgj;
 }
 
-void removeBackground(Job* bgj) {
+Job* removeBackground(Job* bgj) {
   if (bgList == NULL)
-    return;
+    return NULL;
   Job* j, *prev = bgList;
   if (bgj == bgList) {
     j = bgj;
@@ -52,7 +52,7 @@ void removeBackground(Job* bgj) {
     free(j->head->argv);
     free(j->head);
     free(j);
-    return;
+    return NULL;
   }
   for (j = bgList->next; j; j = j->next) {
     if (j == bgj) {
@@ -60,10 +60,11 @@ void removeBackground(Job* bgj) {
       free(j->head->argv);
       free(j->head);
       free(j);
-      return;
+      return prev;
     }
     prev = j;
   }
+  return NULL;
 }
 
 void checkBackground() {
@@ -72,8 +73,10 @@ void checkBackground() {
   int status;
   for (j = bgList; j; j = j->next)
     if ((pid = waitpid(j->head->pid, &status, WNOHANG)) > 0) {
-      printf("[%d] %s Done\n", pid, j->head->argv[0]);
-      removeBackground(j);
+      //printf("[%d] %s Done\n", pid, j->head->argv[0]);
+      j = removeBackground(j);
+      if (j == NULL)
+        break;
     }
 }
 
