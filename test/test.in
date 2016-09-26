@@ -1,12 +1,22 @@
-ls
 ps
-ls -al
-ls - l
-ls -al | grep myshell
-ps -ef | grep myshell
-ls | ls | ls | ls | ls
-/
-.
-invalid_command_test
-exit | cd / | ls
+ps f
+ls -l -t -r
+ps -e -a -f -u
+/bin/ps f
+ls -a -a
+wrong
+ps f
+man pipe
+ps f
+
+
+ls |
+ls -l|wc -l
+ls -l|wc -l
+cat src/jobs.c | grep pid | wc -l
+ps f
+cat Makefile | wrong | ws -l
+
+exit anyway
+not exit
 exit
