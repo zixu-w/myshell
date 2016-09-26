@@ -32,54 +32,6 @@ int jobCompleted(Job* j) {
   return 1;
 }
 
-void appendBackground(Job* bgj) {
-  if (bgList == NULL) {
-    bgList = bgj;
-    return;
-  }
-  Job* j;
-  for (j = bgList; j->next; j = j->next);
-  j->next = bgj;
-}
-
-Job* removeBackground(Job* bgj) {
-  if (bgList == NULL)
-    return NULL;
-  Job* j, *prev = bgList;
-  if (bgj == bgList) {
-    j = bgj;
-    bgList = bgList->next;
-    free(j->head->argv);
-    free(j->head);
-    free(j);
-    return NULL;
-  }
-  for (j = bgList->next; j; j = j->next) {
-    if (j == bgj) {
-      prev->next = j->next;
-      free(j->head->argv);
-      free(j->head);
-      free(j);
-      return prev;
-    }
-    prev = j;
-  }
-  return NULL;
-}
-
-void checkBackground() {
-  Job* j;
-  pid_t pid;
-  int status;
-  for (j = bgList; j; j = j->next)
-    if ((pid = waitpid(j->head->pid, &status, WNOHANG)) > 0) {
-      //printf("[%d] %s Done\n", pid, j->head->argv[0]);
-      j = removeBackground(j);
-      if (j == NULL)
-        break;
-    }
-}
-
 void launchProcess(Process* p, pid_t pgid, int in, int out) {
   if (in != STDIN_FILENO) {
     dup2(in, STDIN_FILENO);
@@ -112,6 +64,11 @@ int launchJob(Job* j) {
     in = j->stdin;
     pid_t fpid = fork();
     if (fpid == 0) {
+      fpgid = getpgid(0);
+      if (j->bg)
+        j->pgid = 0;
+      else
+        j->pgid = fpgid;
       for (; p; p = p->next) {
         if (p->next) {
           if (pipe(mypipe) < 0)
@@ -145,7 +102,7 @@ int launchJob(Job* j) {
       }
       for (p = j->head; p; p = p->next)
         if (p->pid >= 0)
-          waitpid(p->pid, &status, 0);
+          waitpid(p->pid, &status, j->bg);
       exit(WEXITSTATUS(status));
     } else if (fpid < 0)
       error(EXIT_FAILURE, errno, "fork");
@@ -168,8 +125,6 @@ int launchJob(Job* j) {
       waitpid(pid, &status, j->bg);
       if (!j->bg)
         return WEXITSTATUS(status);
-      else
-        appendBackground(j);
     }
   }
   return 0;

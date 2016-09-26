@@ -20,7 +20,6 @@ typedef struct Job {
   int bg;
 } Job;
 
-void checkBackground();
 int launchJob(Job*);
 
 #endif

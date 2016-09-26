@@ -1,7 +1,8 @@
 #include <signal.h>
-#include <string.h>
-#include <stdlib.h>
+#include <unistd.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <sys/wait.h>
 
 #include "signals.h"
 
@@ -10,7 +11,22 @@ void intSighandler(int signum) {
 }
 
 void cldSighandler(int signum, siginfo_t* sig, void* context) {
-  // TODO
+  pid_t pid = sig->si_pid;
+  pid_t pgid = getpgid(pid);
+  if (pgid == pid) {
+    printf("[%d] ", pid);
+    char* filename = (char*)malloc(256*sizeof(char));
+    sprintf(filename, "/proc/%d/comm", pid);
+    FILE* file = fopen(filename, "r");
+    int c;
+    if (file) {
+      while ((c = getc(file)) != '\n')
+        putchar(c);
+      fclose(file);
+    }
+    printf(" Done\n");
+    waitpid(pid, NULL, 0);
+  }
 }
 
 void registerSighandler() {
