@@ -11,26 +11,7 @@
 extern char* program_invocation_name;
 extern char* program_invocation_short_name;
 
-Job* head = NULL;
-Job* bgList = NULL;
-
 pid_t fpgid;
-
-Job* getJob(pid_t pgid) {
-  Job* j;
-  for (j = head; j; j = j->next)
-    if (j->pgid == pgid)
-      return j;
-  return NULL;
-}
-
-int jobCompleted(Job* j) {
-  Process* p;
-  for (p = j->head; p; p = p->next)
-    if (!p->completed)
-      return 0;
-  return 1;
-}
 
 void launchProcess(Process* p, pid_t pgid, int in, int out) {
   if (in != STDIN_FILENO) {

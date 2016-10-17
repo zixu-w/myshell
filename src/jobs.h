@@ -7,12 +7,9 @@ typedef struct Process {
   struct Process* next;
   char** argv;
   pid_t pid;
-  char completed;
-  int status;
 } Process;
 
 typedef struct Job {
-  struct Job* next;
   char* cmd;
   Process* head;
   pid_t pgid;
