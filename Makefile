@@ -1,4 +1,4 @@
-.PHONY : clean test run testrun
+.PHONY : fclean clean test run testrun
 
 BINDIR := bin
 MYSHELL_SRC := $(wildcard src/*.c)
