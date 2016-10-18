@@ -6,9 +6,7 @@
 
 #include "signals.h"
 
-void intSighandler(int signum) {
-  // TODO
-}
+void intSighandler(int signum) {}
 
 void cldSighandler(int signum, siginfo_t* sig, void* context) {
   pid_t pid = sig->si_pid;

@@ -15,7 +15,6 @@ Job* parse(char* line) {
   memset(j, 0, sizeof(Job));
   j->stdin = STDIN_FILENO;
   j->stdout = STDOUT_FILENO;
-
   enum _STATE {
     CMD_INI,
     TOK_INI,
@@ -108,7 +107,7 @@ Job* parse(char* line) {
     }
 
     if (state == POST_TOK) {
-      if (*(token+1) == '\0' && *token != '&' && *token != '|')
+      if (*(token+1) == '\0' && *token == ' ')
         token++;
       if (*token == ' ' || *token == '\t' || *token == '\r' || *token == '\a')
         continue;

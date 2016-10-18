@@ -29,6 +29,7 @@ void launchProcess(Process* p, pid_t pgid, int in, int out) {
 }
 
 int launchJob(Job* j) {
+  signal(SIGINT, SIG_IGN);
   if (j == NULL)
     return -1;
   fpgid = getpgid(0);
