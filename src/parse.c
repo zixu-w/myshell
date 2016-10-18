@@ -15,29 +15,31 @@ Job* parse(char* line) {
   memset(j, 0, sizeof(Job));
   j->stdin = STDIN_FILENO;
   j->stdout = STDOUT_FILENO;
-  
-  enum _STATE {INI, CMD, WHS, PIP, BKG} state = INI;
+
+  enum _STATE {
+    CMD_INI,
+    TOK_INI,
+    PRE_TOK,
+    TOK,
+    POST_TOK,
+    CMD_FIN,
+    BKG,
+  } state = CMD_INI;
   char* token;
   char* tok;
   char** cmds;
-  Process* head;
-  Process* prev;
+  Process* head = NULL;
+  Process* prev = NULL;
   Process* p;
   size_t argSize, pos;
-  for (token = line; *token; ++token) {
-    if (state == INI) {
-      tok = (char*)malloc((TOK_SIZE+1)*sizeof(char));
-      if (tok == NULL) {
-        fprintf(stderr, "myshell: fail to allocate token buffer.\n");
-        free(j);
-        return NULL;
-      }
-      memset(tok, 0, (TOK_SIZE+1)*sizeof(char));
+  int delta = 1;
+  for (token = line; *token; token+=delta) {
+    delta = 1;
+    if (state == CMD_INI) {
       cmds = (char**)malloc((ARG_SIZE+1)*sizeof(char*));
       if (cmds == NULL) {
         fprintf(stderr, "myshell: fail to allocate command buffer.\n");
         free(j);
-        free(tok);
         return NULL;
       }
       memset(cmds, 0, (ARG_SIZE+1)*sizeof(char*));
@@ -45,17 +47,42 @@ Job* parse(char* line) {
       if (p == NULL) {
         fprintf(stderr, "myshell: fail to allocate process buffer.\n");
         free(j);
-        free(tok);
         free(cmds);
         return NULL;
       }
       memset(p, 0, sizeof(Process));
-      head = NULL;
-      prev = NULL;
       argSize = 0;
+      state = TOK_INI;
+    }
+
+    if (state == TOK_INI) {
       pos = 0;
+      tok = (char*)malloc((TOK_SIZE+1)*sizeof(char));
+      if (tok == NULL) {
+        fprintf(stderr, "myshell: fail to allocate token buffer.\n");
+        free(j);
+        free(p);
+        free(cmds);
+        return NULL;
+      }
+      memset(tok, 0, (TOK_SIZE+1)*sizeof(char));
+      if (*token == ' ' || *token == '\t' || *token == '\r' || *token == '\a') {
+        state = PRE_TOK;
+        continue;
+      } else if (*token == '|' || *token == '&') {
+        fprintf(stderr, "myshell: parse error near '%c'.\n", *token);
+        free(j);
+        free(p);
+        free(tok);
+        free(cmds);
+        return NULL;
+      } else
+        state = TOK;
+    }
+
+    if (state == PRE_TOK) {
       if (*token == ' ' || *token == '\t' || *token == '\r' || *token == '\a')
-        state = WHS;
+        continue;
       else if (*token == '|' || *token == '&') {
         fprintf(stderr, "myshell: parse error near '%c'.\n", *token);
         free(j);
@@ -64,18 +91,29 @@ Job* parse(char* line) {
         free(cmds);
         return NULL;
       } else
-        state = CMD;
+        state = TOK;
     }
 
-    if (state == WHS) {
+    if (state == TOK) {
+      if (*token == ' ' || *token == '\t' || *token == '\r' || *token == '\a')
+        state = POST_TOK;
+      else if (*token == '|' || *token == '&') {
+        state = CMD_FIN;
+      } else {
+        tok[pos++] = *token;
+        if (*(token+1) == '\0') {
+          token++;
+          state = POST_TOK;
+        }
+      }
+    }
+
+    if (state == POST_TOK) {
+      if (*(token+1) == '\0')
+        token++;
       if (*token == ' ' || *token == '\t' || *token == '\r' || *token == '\a')
         continue;
-      else
-        state = CMD;
-    }
-
-    if (state == CMD) {
-      if (*token == ' ' || *token == '\t' || *token == '\r' || *token == '\a') {
+      else {
         tok[pos] = '\0';
         if (argSize >= ARG_SIZE) {
           fprintf(stderr, "myshell: arguments buffer overflow, max %d arguments.\n", ARG_SIZE);
@@ -86,59 +124,40 @@ Job* parse(char* line) {
           return NULL;
         }
         cmds[argSize++] = tok;
-        tok = (char*)malloc((TOK_SIZE+1)*sizeof(char));
-        pos = 0;
-        state = WHS;
+        if (*token == '|' || *token == '&' || *token == '\0')
+          state = CMD_FIN;
+        else {
+          delta = 0;
+          state = TOK_INI;
+        }
       }
-      else if (*token == '|' || *token == '&') {
-        p->argv = (char**)malloc((argSize+1)*sizeof(char*));
-        size_t i;
-        for (i = 0; i < argSize; ++i)
-          p->argv[i] = cmds[i];
-        p->argv[argSize] = NULL;
-        if (head == NULL) {
-          head = p;
-          prev = p;
-        } else {
-          prev->next = p;
-          prev = p;
-        }
-        if (*token == '|')
-          state = INI;
-        else if (*token == '&')
-          state = BKG;
-        continue;
+    }
+
+    if (state == CMD_FIN) {
+      p->argv = (char**)malloc((argSize+1)*sizeof(char*));
+      size_t i;
+      for (i = 0; i < argSize; ++i)
+        p->argv[i] = cmds[i];
+      p->argv[argSize] = NULL;
+      if (head == NULL) {
+        head = p;
+        prev = p;
       } else {
-        tok[pos++] = *token;
-        if (*(token+1) == '\0') {
-          tok[pos] = '\0';
-          if (argSize >= ARG_SIZE) {
-            fprintf(stderr, "myshell: arguments buffer overflow, max %d arguments.\n", ARG_SIZE);
-            free(j);
-            free(p);
-            free(tok);
-            free(cmds);
-            return NULL;
-          }
-          cmds[argSize++] = tok;
-          p->argv = (char**)malloc((argSize+1)*sizeof(char*));
-          size_t i;
-          for (i = 0; i < argSize; ++i)
-            p->argv[i] = cmds[i];
-          p->argv[argSize] = NULL;
-          if (head == NULL) {
-            head = p;
-            prev = p;
-          } else {
-            prev->next = p;
-            prev = p;
-          }
-        }
+        prev->next = p;
+        prev = p;
+      }
+      if (*token == '&')
+        state = BKG;
+      else {
+        state = CMD_INI;
+        continue;
       }
     }
 
     if (state == BKG) {
       j->bg = 1;
+      if (*(++token) == '\0')
+        break;
       if (*token == ' ' || *token == '\t' || *token == '\r' || *token == '\a')
         continue;
       else {

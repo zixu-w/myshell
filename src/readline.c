@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "readline.h"
 #include "signals.h"
@@ -10,6 +11,7 @@ char* readline() {
     fprintf(stderr, "myshell: fail to allocate buffer.\n");
     exit(EXIT_FAILURE);
   }
+  memset(buffer, 0, BUFFER_SIZE*sizeof(char));
   char c;
   int pos = 0;
   while (1) {
