@@ -1,9 +1,10 @@
-#ifndef _SIGNAL_H
-#define _SIGNAL_H
+#ifndef _SIGNALS_H
+#define _SIGNALS_H
 
 #include <signal.h>
 
-void sighandler(int);
+volatile sig_atomic_t sigur1Received;
+
 void registerSighandler(void);
 
 #endif
