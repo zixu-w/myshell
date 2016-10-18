@@ -39,59 +39,44 @@ int launchJob(Job* j) {
   program_invocation_name = program_invocation_short_name;
   Process* p = j->head;
   pid_t pid;
-  int status;
+  int status = EXIT_SUCCESS;
   if (p->next != NULL) {
     int mypipe[2], in, out;
     in = j->stdin;
-    pid_t fpid = fork();
-    if (fpid == 0) {
-      fpgid = getpgid(0);
-      if (j->bg)
-        j->pgid = 0;
-      else
-        j->pgid = fpgid;
-      for (; p; p = p->next) {
-        if (p->next) {
-          if (pipe(mypipe) < 0)
-            error(EXIT_FAILURE, errno, "pipe");
-          out = mypipe[1];
-        } else
-          out = j->stdout;
-        builtin_func_ptr builtin = map(p->argv[0]);
-        if (builtin != NULL) {
-          pid = fork();
-          if (pid == 0)
-            exit(builtin(p->argv));
-          else if (pid < 0)
-            error(EXIT_FAILURE, errno, "fork");
-          else
-            p->pid = pid;
-        } else {
-          pid = fork();
-          if (pid == 0)
-            launchProcess(p, j->pgid, in, out);
-          else if (pid < 0)
-            error(EXIT_FAILURE, errno, "fork");
-          else
-            p->pid = pid;
-        }
-        if (in != j->stdin)
-          close(in);
-        if (out != j->stdout)
-          close(out);
-        in = mypipe[0];
+    for (; p; p = p->next) {
+      if (p->next) {
+        if (pipe(mypipe) < 0)
+          error(EXIT_FAILURE, errno, "pipe");
+        out = mypipe[1];
+      } else
+        out = j->stdout;
+      builtin_func_ptr builtin = map(p->argv[0]);
+      if (builtin != NULL) {
+        pid = fork();
+        if (pid == 0)
+          exit(builtin(p->argv));
+        else if (pid < 0)
+          error(EXIT_FAILURE, errno, "fork");
+        else
+          p->pid = pid;
+      } else {
+        pid = fork();
+        if (pid == 0)
+          launchProcess(p, j->pgid, in, out);
+        else if (pid < 0)
+          error(EXIT_FAILURE, errno, "fork");
+        else
+          p->pid = pid;
       }
-      for (p = j->head; p; p = p->next)
-        if (p->pid >= 0)
-          waitpid(p->pid, &status, j->bg);
-      exit(WEXITSTATUS(status));
-    } else if (fpid < 0)
-      error(EXIT_FAILURE, errno, "fork");
-    else {
-      j->pgid = fpid;
-      waitpid(fpid, &status, 0);
-      return WEXITSTATUS(status);
+      if (in != j->stdin)
+        close(in);
+      if (out != j->stdout)
+        close(out);
+      in = mypipe[0];
     }
+    for (p = j->head; p; p = p->next)
+      if (p->pid >= 0)
+        waitpid(p->pid, &status, j->bg);
   } else {
     builtin_func_ptr builtin = map(p->argv[0]);
     if (builtin != NULL)
@@ -108,5 +93,5 @@ int launchJob(Job* j) {
         return WEXITSTATUS(status);
     }
   }
-  return 0;
+  return WEXITSTATUS(status);
 }
