@@ -23,6 +23,7 @@ Job* parse(char* line) {
     TOK,
     POST_TOK,
     CMD_FIN,
+    PIP,
     BKG,
   } state = CMD_INI;
   char* token;
@@ -95,11 +96,9 @@ Job* parse(char* line) {
     }
 
     if (state == TOK) {
-      if (*token == ' ' || *token == '\t' || *token == '\r' || *token == '\a')
+      if (*token == ' ' || *token == '\t' || *token == '\r' || *token == '\a' || *token == '|' || *token == '&')
         state = POST_TOK;
-      else if (*token == '|' || *token == '&') {
-        state = CMD_FIN;
-      } else {
+      else {
         tok[pos++] = *token;
         if (*(token+1) == '\0') {
           token++;
@@ -109,7 +108,7 @@ Job* parse(char* line) {
     }
 
     if (state == POST_TOK) {
-      if (*(token+1) == '\0')
+      if (*(token+1) == '\0' && *token != '&' && *token != '|')
         token++;
       if (*token == ' ' || *token == '\t' || *token == '\r' || *token == '\a')
         continue;
@@ -135,6 +134,7 @@ Job* parse(char* line) {
 
     if (state == CMD_FIN) {
       p->argv = (char**)malloc((argSize+1)*sizeof(char*));
+      memset(p->argv, 0, (argSize+1)*sizeof(char*));
       size_t i;
       for (i = 0; i < argSize; ++i)
         p->argv[i] = cmds[i];
@@ -148,6 +148,26 @@ Job* parse(char* line) {
       }
       if (*token == '&')
         state = BKG;
+      else if (*token == '|')
+        state = PIP;
+      else {
+        state = CMD_INI;
+        continue;
+      }
+    }
+
+    if (state == PIP) {
+      delta = 0;
+      if (*(++token) == '\0') {
+        fprintf(stderr, "myshell: parse error near '|'.\n");
+        free(j);
+        free(p);
+        free(tok);
+        free(cmds);
+        return NULL;
+      }
+      if (*token == ' ' || *token == '\t' || *token == '\r' || *token == '\a')
+        continue;
       else {
         state = CMD_INI;
         continue;
