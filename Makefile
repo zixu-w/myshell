@@ -1,4 +1,4 @@
-.PHONY : clean test run testrun
+.PHONY : fclean clean test run testrun
 
 BINDIR := bin
 MYSHELL_SRC := $(wildcard src/*.c)
@@ -6,7 +6,7 @@ MYSHELL_OBJ := $(MYSHELL_SRC:.c=.o)
 TESTDIR := test
 TEST_SRC := $(wildcard $(TESTDIR)/*.c)
 TEST_OBJ := $(TEST_SRC:.c=.o)
-CFLAG := -ggdb
+CFLAG := -ggdb -Wall
 
 MYSHELL := $(BINDIR)/myshell
 TEST := $(BINDIR)/test
