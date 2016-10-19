@@ -7,6 +7,7 @@
 #include "signals.h"
 
 extern volatile sig_atomic_t isTimeX;
+extern struct timeval startTime;
 
 const char* keywords[] = {
   "exit",
@@ -78,5 +79,6 @@ int builtin_timeX(char** argv, Job* j) {
   free(argv);
   j->head->argv = cmdArgv;
   isTimeX = 1;
+  gettimeofday(&startTime, NULL);
   return launchJob(j);
 }

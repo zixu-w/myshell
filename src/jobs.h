@@ -15,7 +15,6 @@ typedef struct Job {
   pid_t pgid;
   int stdin, stdout;
   int bg;
-  int isTimeX;
 } Job;
 
 int launchJob(Job*);
