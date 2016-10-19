@@ -7,12 +7,29 @@
 #include "signals.h"
 
 extern volatile sig_atomic_t sigur1Received;
+extern volatile sig_atomic_t isTimeX;
 
 void intSighandler(int signum) {}
 
 void cldSighandler(int signum, siginfo_t* sig, void* context) {
   pid_t pid = sig->si_pid;
   pid_t pgid = getpgid(pid);
+  if (isTimeX) {
+    // TODO
+    printf("timeX: ");
+    printf("[%d] ", pid);
+    char* filename = (char*)malloc(256*sizeof(char));
+    sprintf(filename, "/proc/%d/comm", pid);
+    FILE* file = fopen(filename, "r");
+    int c;
+    if (file) {
+      while ((c = getc(file)) != '\n')
+        putchar(c);
+      fclose(file);
+    }
+    printf("\n");
+    waitpid(pid, NULL, 0);
+  }
   if (pgid == pid) {
     printf("[%d] ", pid);
     char* filename = (char*)malloc(256*sizeof(char));

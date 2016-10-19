@@ -4,6 +4,7 @@
 #include <signal.h>
 
 volatile sig_atomic_t sigur1Received;
+volatile sig_atomic_t isTimeX;
 
 void registerSighandler(void);
 

@@ -5,13 +5,16 @@
 #include <error.h>
 #include <sys/wait.h>
 #include <signal.h>
+#include <string.h>
 
 #include "jobs.h"
 #include "builtin.h"
+#include "signals.h"
 
 extern char* program_invocation_name;
 extern char* program_invocation_short_name;
 extern volatile sig_atomic_t sigur1Received;
+extern volatile sig_atomic_t isTimeX;
 
 pid_t fpgid;
 
@@ -48,7 +51,7 @@ int launchJob(Job* j) {
   Process* p = j->head;
   pid_t pid;
   int status = EXIT_SUCCESS;
-  if (p->next != NULL) {
+  if (p->next != NULL && strcmp(p->argv[0], "timeX")) {
     int mypipe[2], in, out;
     in = j->stdin;
     for (; p; p = p->next) {
@@ -62,7 +65,7 @@ int launchJob(Job* j) {
       if (builtin != NULL) {
         pid = fork();
         if (pid == 0) {
-          exit(builtin(p->argv));
+          exit(builtin(p->argv, j));
         }
         else if (pid < 0)
           error(EXIT_FAILURE, errno, "fork");
@@ -88,12 +91,16 @@ int launchJob(Job* j) {
       in = mypipe[0];
     }
     for (p = j->head; p; p = p->next)
-      if (p->pid >= 0)
-        waitpid(p->pid, &status, j->bg);
+      if (p->pid >= 0) {
+        if (isTimeX)
+          waitid(P_PID, p->pid, NULL, WEXITED | WNOWAIT);
+        else
+          waitpid(p->pid, &status, j->bg);
+      }
   } else {
     builtin_func_ptr builtin = map(p->argv[0]);
     if (builtin != NULL)
-      return builtin(p->argv);
+      return builtin(p->argv, j);
     pid = fork();
     if (pid == 0)
       launchProcess(p, j->pgid, j->stdin, j->stdout);
@@ -102,10 +109,16 @@ int launchJob(Job* j) {
     else {
       p->pid = pid;
       kill(pid, SIGUSR1);
-      waitpid(pid, &status, j->bg);
-      if (!j->bg)
+      if (isTimeX)
+        waitid(P_PID, pid, NULL, WEXITED | WNOWAIT);
+      else
+        waitpid(pid, &status, j->bg);
+      if (!j->bg) {
+        isTimeX = 0;
         return WEXITSTATUS(status);
+      }
     }
   }
+  isTimeX = 0;
   return WEXITSTATUS(status);
 }
