@@ -73,9 +73,15 @@ int builtin_timeX(char** argv, Job* j) {
   }
   size_t i;
   for (i = 1; argv[i]; i++);
-  char** cmdArgv = (char**)malloc(i*sizeof(char*));
+  char** cmdArgv = (char**)malloc((i+1)*sizeof(char*));
+  if (cmdArgv == NULL) {
+    fprintf(stderr, "myshell: fail to allocate buffer.\n");
+    return EXIT_FAILURE;
+  }
+  memset(cmdArgv, 0, (i+1)*sizeof(char*));
   for (i = 0; argv[i+1]; i++)
     cmdArgv[i] = argv[i+1];
+  cmdArgv[i+1] = NULL;
   free(argv);
   j->head->argv = cmdArgv;
   isTimeX = 1;

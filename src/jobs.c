@@ -114,11 +114,28 @@ int launchJob(Job* j) {
       else
         waitpid(pid, &status, j->bg);
       if (!j->bg) {
-        isTimeX = 0;
+        cleanJob(j);
         return WEXITSTATUS(status);
       }
     }
   }
-  isTimeX = 0;
+  cleanJob(j);
   return WEXITSTATUS(status);
+}
+
+void cleanJob(Job* j) {
+  isTimeX = 0;
+  if (j == NULL)
+    return;
+  cleanProcess(j->head);
+  free(j);
+}
+
+void cleanProcess(Process* p) {
+  if (p == NULL)
+    return;
+  cleanProcess(p->next);
+  if (p->argv != NULL)
+    free(p->argv);
+  free(p);
 }

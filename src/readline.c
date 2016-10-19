@@ -6,7 +6,7 @@
 #include "signals.h"
 
 char* readline() {
-  char* buffer = (char*)malloc(sizeof(char) * BUFFER_SIZE);
+  char* buffer = (char*)malloc(BUFFER_SIZE*sizeof(char));
   if (buffer == NULL) {
     fprintf(stderr, "myshell: fail to allocate buffer.\n");
     exit(EXIT_FAILURE);
