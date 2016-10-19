@@ -3,10 +3,13 @@
 
 #define ARGV_SIZE 30
 
-typedef int(*builtin_func_ptr)(char**);
+#include "jobs.h"
 
-int builtin_exit(char**);
-int builtin_cd(char**);
+typedef int(*builtin_func_ptr)(char**, Job*);
+
+int builtin_exit(char**, Job*);
+int builtin_cd(char**, Job*);
+int builtin_timeX(char**, Job*);
 
 builtin_func_ptr map(const char*);
 

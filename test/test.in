@@ -1,26 +1,52 @@
 ps
 ps f
 ls -l -t -r
-ps -e -a -f -u
 /bin/ps f
-ls -a -a
+ls -l -a
 wrong
 ps f
 man pipe
 ps f
-
-
+ps & ls
+ps & ls &
+./bin/loopf 4&
+ps f
+./bin/loopf 15&
+./bin/loopf 8&
+ps f
+sleep 20
+ps f
+ps f&
+ps f&
+ps f&
+ps f&
+./bin/loopf 20&
+./bin/loopf 9&
+ps f
+./bin/loopf 10
 ls |
 ls -l|wc -l
-ls -l|wc -l
+ls -l | wc -l
 cat src/jobs.c | grep pid | wc -l
 ps f
+./bin/inproc | ./bin/outproc
+./bin/inproc | ./bin/outproc | ./bin/outproc | ./bin/outproc | ./bin/outproc
+ps f
+./bin/loopf 15 | ./bin/loopf 6 | ./bin/loopf 10
+ps f
 cat Makefile | wrong | ws -l
-
-ls & ls
-ls&
-ls &
-
+timeX
+./timeX
+timeX ./loopf 5 &
+timeX ps f
+timeX ls -l -t -r
+timeX cat src/parse.c | grep char | wc -l
+timeX ./bin/loopf 9
+timeX ./bin/loopf 15 | ./bin/loopf 6 | ./bin/loopf 10
+./bin/loopf 20 | ./bin/loopf 9 | ./bin/loopf 12&
+ps f
+sleep 25
+ps f
 exit anyway
 not exit
 exit

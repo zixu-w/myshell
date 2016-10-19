@@ -15,8 +15,8 @@ int main(int argc, char const *argv[]) {
       echo = 1;
   setbuf(stdout, NULL);
   char* input = NULL;
-  registerSighandler();
   while (1) {
+    registerSighandler();
     printf("## myshell $ ");
     input = readline();
     if (input != NULL && strcmp(input, "")) {

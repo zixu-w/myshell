@@ -4,12 +4,17 @@
 #include <errno.h>
 #include <error.h>
 #include <sys/wait.h>
+#include <signal.h>
+#include <string.h>
 
 #include "jobs.h"
 #include "builtin.h"
+#include "signals.h"
 
 extern char* program_invocation_name;
 extern char* program_invocation_short_name;
+extern volatile sig_atomic_t sigur1Received;
+extern volatile sig_atomic_t isTimeX;
 
 pid_t fpgid;
 
@@ -23,6 +28,9 @@ void launchProcess(Process* p, pid_t pgid, int in, int out) {
     close(out);
   }
   setpgid(0, pgid);
+  while (!sigur1Received)
+    ;
+  sigur1Received = 0;
   if (execvp(p->argv[0], p->argv) == -1)
     error(EXIT_FAILURE, errno, "'%s'", p->argv[0]);
   exit(EXIT_FAILURE);
@@ -34,68 +42,65 @@ int launchJob(Job* j) {
   fpgid = getpgid(0);
   if (j->bg)
     j->pgid = 0;
-  else
+  else {
     j->pgid = fpgid;
+    signal(SIGINT, SIG_IGN);
+  }
+  sigur1Received = 0;
   program_invocation_name = program_invocation_short_name;
   Process* p = j->head;
   pid_t pid;
-  int status;
-  if (p->next != NULL) {
+  int status = EXIT_SUCCESS;
+  if (p->next != NULL && strcmp(p->argv[0], "timeX")) {
     int mypipe[2], in, out;
     in = j->stdin;
-    pid_t fpid = fork();
-    if (fpid == 0) {
-      fpgid = getpgid(0);
-      if (j->bg)
-        j->pgid = 0;
-      else
-        j->pgid = fpgid;
-      for (; p; p = p->next) {
-        if (p->next) {
-          if (pipe(mypipe) < 0)
-            error(EXIT_FAILURE, errno, "pipe");
-          out = mypipe[1];
-        } else
-          out = j->stdout;
-        builtin_func_ptr builtin = map(p->argv[0]);
-        if (builtin != NULL) {
-          pid = fork();
-          if (pid == 0)
-            exit(builtin(p->argv));
-          else if (pid < 0)
-            error(EXIT_FAILURE, errno, "fork");
-          else
-            p->pid = pid;
-        } else {
-          pid = fork();
-          if (pid == 0)
-            launchProcess(p, j->pgid, in, out);
-          else if (pid < 0)
-            error(EXIT_FAILURE, errno, "fork");
-          else
-            p->pid = pid;
+    for (; p; p = p->next) {
+      if (p->next) {
+        if (pipe(mypipe) < 0)
+          error(EXIT_FAILURE, errno, "pipe");
+        out = mypipe[1];
+      } else
+        out = j->stdout;
+      builtin_func_ptr builtin = map(p->argv[0]);
+      if (builtin != NULL) {
+        pid = fork();
+        if (pid == 0) {
+          exit(builtin(p->argv, j));
         }
-        if (in != j->stdin)
-          close(in);
-        if (out != j->stdout)
-          close(out);
-        in = mypipe[0];
+        else if (pid < 0)
+          error(EXIT_FAILURE, errno, "fork");
+        else {
+          p->pid = pid;
+          kill(pid, SIGUSR1);
+        }
+      } else {
+        pid = fork();
+        if (pid == 0)
+          launchProcess(p, j->pgid, in, out);
+        else if (pid < 0)
+          error(EXIT_FAILURE, errno, "fork");
+        else {
+          p->pid = pid;
+          kill(pid, SIGUSR1);
+        }
       }
-      for (p = j->head; p; p = p->next)
-        if (p->pid >= 0)
-          waitpid(p->pid, &status, j->bg);
-      exit(WEXITSTATUS(status));
-    } else if (fpid < 0)
-      error(EXIT_FAILURE, errno, "fork");
-    else {
-      j->pgid = fpid;
-      waitpid(fpid, &status, 0);
-      return WEXITSTATUS(status);
+      if (in != j->stdin)
+        close(in);
+      if (out != j->stdout)
+        close(out);
+      in = mypipe[0];
     }
+    for (p = j->head; p; p = p->next)
+      if (p->pid >= 0) {
+        if (isTimeX)
+          waitid(P_PID, p->pid, NULL, WEXITED | WNOWAIT);
+        else
+          waitpid(p->pid, &status, j->bg);
+      }
   } else {
     builtin_func_ptr builtin = map(p->argv[0]);
     if (builtin != NULL)
-      return builtin(p->argv);
+      return builtin(p->argv, j);
     pid = fork();
     if (pid == 0)
       launchProcess(p, j->pgid, j->stdin, j->stdout);
@@ -103,10 +108,17 @@ int launchJob(Job* j) {
       error(EXIT_FAILURE, errno, "fork");
     else {
       p->pid = pid;
-      waitpid(pid, &status, j->bg);
-      if (!j->bg)
+      kill(pid, SIGUSR1);
+      if (isTimeX)
+        waitid(P_PID, pid, NULL, WEXITED | WNOWAIT);
+      else
+        waitpid(pid, &status, j->bg);
+      if (!j->bg) {
+        isTimeX = 0;
         return WEXITSTATUS(status);
+      }
     }
   }
-  return 0;
+  isTimeX = 0;
+  return WEXITSTATUS(status);
 }
