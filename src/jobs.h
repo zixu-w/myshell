@@ -10,7 +10,6 @@ typedef struct Process {
 } Process;
 
 typedef struct Job {
-  char* cmd;
   Process* head;
   pid_t pgid;
   int stdin, stdout;
@@ -18,5 +17,7 @@ typedef struct Job {
 } Job;
 
 int launchJob(Job*);
+void cleanJob(Job*);
+void cleanProcess(Process*);
 
 #endif

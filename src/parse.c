@@ -39,14 +39,14 @@ Job* parse(char* line) {
       cmds = (char**)malloc((ARG_SIZE+1)*sizeof(char*));
       if (cmds == NULL) {
         fprintf(stderr, "myshell: fail to allocate command buffer.\n");
-        free(j);
+        cleanJob(j);
         return NULL;
       }
       memset(cmds, 0, (ARG_SIZE+1)*sizeof(char*));
       p = (Process*)malloc(sizeof(Process));
       if (p == NULL) {
         fprintf(stderr, "myshell: fail to allocate process buffer.\n");
-        free(j);
+        cleanJob(j);
         free(cmds);
         return NULL;
       }
@@ -60,7 +60,7 @@ Job* parse(char* line) {
       tok = (char*)malloc((TOK_SIZE+1)*sizeof(char));
       if (tok == NULL) {
         fprintf(stderr, "myshell: fail to allocate token buffer.\n");
-        free(j);
+        cleanJob(j);
         free(p);
         free(cmds);
         return NULL;
@@ -71,7 +71,7 @@ Job* parse(char* line) {
         continue;
       } else if (*token == '|' || *token == '&') {
         fprintf(stderr, "myshell: parse error near '%c'.\n", *token);
-        free(j);
+        cleanJob(j);
         free(p);
         free(tok);
         free(cmds);
@@ -85,7 +85,7 @@ Job* parse(char* line) {
         continue;
       else if (*token == '|' || *token == '&') {
         fprintf(stderr, "myshell: parse error near '%c'.\n", *token);
-        free(j);
+        cleanJob(j);
         free(p);
         free(tok);
         free(cmds);
@@ -115,7 +115,7 @@ Job* parse(char* line) {
         tok[pos] = '\0';
         if (argSize >= ARG_SIZE) {
           fprintf(stderr, "myshell: arguments buffer overflow, max %d arguments.\n", ARG_SIZE);
-          free(j);
+          cleanJob(j);
           free(p);
           free(tok);
           free(cmds);
@@ -133,6 +133,14 @@ Job* parse(char* line) {
 
     if (state == CMD_FIN) {
       p->argv = (char**)malloc((argSize+1)*sizeof(char*));
+      if (p->argv == NULL) {
+        fprintf(stderr, "myshell: fail to allocate argv buffer.\n");
+        cleanJob(j);
+        free(p);
+        free(tok);
+        free(cmds);
+        return NULL;
+      }
       memset(p->argv, 0, (argSize+1)*sizeof(char*));
       size_t i;
       for (i = 0; i < argSize; ++i)
@@ -159,8 +167,7 @@ Job* parse(char* line) {
       delta = 0;
       if (*(++token) == '\0') {
         fprintf(stderr, "myshell: parse error near '|'.\n");
-        free(j);
-        free(p);
+        cleanJob(j);
         free(tok);
         free(cmds);
         return NULL;
@@ -181,8 +188,7 @@ Job* parse(char* line) {
         continue;
       else {
         fprintf(stderr, "myshell: '&' should not appear in the middle of the command line\n");
-        free(j);
-        free(p);
+        cleanJob(j);
         free(tok);
         free(cmds);
         return NULL;
@@ -190,7 +196,9 @@ Job* parse(char* line) {
     }
   }
   j->head = head;
-  if (j->head == NULL)
+  if (j->head == NULL) {
+    cleanJob(j);
     return NULL;
+  }
   return j;
 }
