@@ -204,14 +204,14 @@ int launchJob(Job* j) {
       }
   } else {
     // If the job does not involve piping or it's a timeX job.
-
-    // Check if the command is a builtin keyword.
-    builtin_func_ptr builtin = map(p->argv[0]);
-    if (builtin != NULL)
-      // Invoke builtin function if is builtin command.
-      return builtin(p->argv, j);
-
-    // Fork if is NOT builtin command.
+    
+    if (!isTimeX) {
+      // Check if the command is a builtin keyword.
+      builtin_func_ptr builtin = map(p->argv[0]);
+      if (builtin != NULL)
+        // Invoke builtin function if is builtin command.
+        return builtin(p->argv, j);
+    }
     pid = fork();
     if (pid == 0)
       // In child process, call launchProcess.
@@ -232,11 +232,6 @@ int launchJob(Job* j) {
       else
         // Wait for child process if in foreground.
         waitpid(pid, &status, j->bg);
-
-      if (!j->bg) {
-        cleanJob(j);
-        return WEXITSTATUS(status);
-      }
     }
   }
   cleanJob(j);
