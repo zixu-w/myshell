@@ -28,6 +28,5 @@ To run the program, use `make run`.
 To run automated test program, use `make testrun`.
 
 #### Documentation
-You can view Doxygen documentations [here](doc/html/index.html).
 
 To generate Doxygen docs, use `make doc`.
