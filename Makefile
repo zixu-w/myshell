@@ -1,4 +1,4 @@
-.PHONY : fclean clean test run testrun doc
+.PHONY : fclean clean test run testrun doc all
 
 BINDIR := bin
 MYSHELL_SRC := $(wildcard src/*.c)
@@ -16,6 +16,8 @@ NESTED := $(BINDIR)/nested
 INPROC := $(BINDIR)/inproc
 OUTPROC := $(BINDIR)/outproc
 AUX := $(LOOPF) $(FOREVER) $(NESTED) $(INPROC) $(OUTPROC)
+
+all : myshell test aux
 
 myshell : $(MYSHELL)
 test : $(TEST)
