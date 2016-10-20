@@ -123,7 +123,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:a49a9ec89f6872282094ae58920220669"><td class="mdescLeft">&#160;</td><td class="mdescRight">Launch a <a class="el" href="structJob.html">job </a>.  <a href="#a49a9ec89f6872282094ae58920220669">More...</a><br /></td></tr>
 <tr class="separator:a49a9ec89f6872282094ae58920220669"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0dfc8ddf9a017ac8590f2490e9bf688d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="jobs_8h.html#a0dfc8ddf9a017ac8590f2490e9bf688d">cleanJob</a> (<a class="el" href="structJob.html">Job</a> *)</td></tr>
-<tr class="memdesc:a0dfc8ddf9a017ac8590f2490e9bf688d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clean up <a class="el" href="structJob.html">job </a>.  <a href="#a0dfc8ddf9a017ac8590f2490e9bf688d">More...</a><br /></td></tr>
+<tr class="memdesc:a0dfc8ddf9a017ac8590f2490e9bf688d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clean up a <a class="el" href="structJob.html">job </a>.  <a href="#a0dfc8ddf9a017ac8590f2490e9bf688d">More...</a><br /></td></tr>
 <tr class="separator:a0dfc8ddf9a017ac8590f2490e9bf688d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a57b5cb8815d124c9fb367986bc994011"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="jobs_8h.html#a57b5cb8815d124c9fb367986bc994011">cleanProcess</a> (<a class="el" href="structProcess.html">Process</a> *)</td></tr>
 <tr class="memdesc:a57b5cb8815d124c9fb367986bc994011"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clean up a <a class="el" href="structProcess.html">process </a>.  <a href="#a57b5cb8815d124c9fb367986bc994011">More...</a><br /></td></tr>
@@ -173,19 +173,15 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Clean up <a class="el" href="structJob.html">job </a>. </p>
-<p>Clean up a <a class="el" href="structJob.html">job </a>.</p>
-<p>This function takes a job and launches it. It handles background/foreground setting, pipe setting, builtin function looking up before invoking the process(es). It then calls <a class="el" href="jobs_8c.html#ac23864d3c2b6be96463a459b9a1fa425">launchProcess() </a> to launch the process(es) and waits for foreground process(es) to terminate. Then it performs cleaning operations.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="jobs_8c.html#ac23864d3c2b6be96463a459b9a1fa425" title="Launch a process . ">launchProcess</a> </dd>
-<dd>
-<a class="el" href="jobs_8h.html#a0dfc8ddf9a017ac8590f2490e9bf688d" title="Clean up job . ">cleanJob</a></dd></dl>
+<p>Clean up a <a class="el" href="structJob.html">job </a>. </p>
+<p>This function releases the memory of job <code>j</code> and reset flag <code>isTimeX</code>. It releases the the process(es) and then releases the job itself.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">j</td><td>Pointer to the job to be launched.</td></tr>
+    <tr><td class="paramname">j</td><td>Pointer to the job to be cleaned.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Exit status. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="jobs_8c.html#a396dc300a8c6a0423c1644ea7d898259" title="Clean up a process . ">cleanProcess</a> </dd></dl>
 
 </div>
 </div>
@@ -197,13 +193,20 @@ Functions</h2></td></tr>
           <td class="memname">void cleanProcess </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structProcess.html">Process</a> *&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramname"><em>p</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Clean up a <a class="el" href="structProcess.html">process </a>. </p>
+<p>This function releases the memory of process <code>p</code> recursively. It releases the argument vector and then releases the process itself.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">p</td><td>Pointer to the process to be cleaned. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -223,23 +226,23 @@ Functions</h2></td></tr>
 
 <p>Launch a <a class="el" href="structJob.html">job </a>. </p>
 <p>This function takes a job and launches it. It handles background/foreground setting, pipe setting, builtin function looking up before invoking the process(es). It then calls <a class="el" href="jobs_8c.html#ac23864d3c2b6be96463a459b9a1fa425">launchProcess() </a> to launch the process(es) and waits for foreground process(es) to terminate. Then it performs cleaning operations.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="jobs_8c.html#ac23864d3c2b6be96463a459b9a1fa425" title="Launch a process . ">launchProcess</a> </dd>
-<dd>
-<a class="el" href="jobs_8c.html#a39a3def56bdba04d0ae732c45dd652e9" title="Clean up job . ">cleanJob</a></dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">j</td><td>Pointer to the job to be launched.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Exit status. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Exit status.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="jobs_8c.html#ac23864d3c2b6be96463a459b9a1fa425" title="Launch a process . ">launchProcess</a> </dd>
+<dd>
+<a class="el" href="jobs_8c.html#a39a3def56bdba04d0ae732c45dd652e9" title="Clean up a job . ">cleanJob</a> </dd></dl>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Oct 21 2016 01:38:17 for myshell by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 21 2016 02:00:02 for myshell by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.11
 </small></address>
