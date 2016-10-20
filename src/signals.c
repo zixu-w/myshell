@@ -7,10 +7,6 @@
 
 #include "signals.h"
 
-extern volatile sig_atomic_t sigur1Received;
-extern volatile sig_atomic_t isTimeX;
-extern struct timeval endTime;
-
 void intSighandler(int signum) {}
 
 void cldSighandler(int signum, siginfo_t* sig, void* context) {

@@ -13,8 +13,6 @@
 
 extern char* program_invocation_name;
 extern char* program_invocation_short_name;
-extern volatile sig_atomic_t sigur1Received;
-extern volatile sig_atomic_t isTimeX;
 
 pid_t fpgid;
 
