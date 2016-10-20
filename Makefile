@@ -6,7 +6,7 @@ MYSHELL_OBJ := $(MYSHELL_SRC:.c=.o)
 TESTDIR := test
 TEST_SRC := $(wildcard $(TESTDIR)/*.c)
 TEST_OBJ := $(TEST_SRC:.c=.o)
-CFLAG := -ggdb -Wall
+CFLAG := -Wall -O3 -D NDEBUG
 
 MYSHELL := $(BINDIR)/myshell
 TEST := $(BINDIR)/test
@@ -18,32 +18,36 @@ OUTPROC := $(BINDIR)/outproc
 AUX := $(LOOPF) $(FOREVER) $(NESTED) $(INPROC) $(OUTPROC)
 
 myshell : $(MYSHELL)
-	chmod +x $^
 test : $(TEST)
-	chmod +x $^
 aux : $(AUX)
-	chmod +x $^
 
 $(LOOPF) : $(TESTDIR)/test_aux/loopever.c
 	$(CC) -o $@ $^ -D FOREVER=0
+	chmod +x $@
 
 $(FOREVER) : $(TESTDIR)/test_aux/loopever.c
 	$(CC) -o $@ $^ -D FOREVER=1
+	chmod +x $@
 
 $(NESTED) : $(TESTDIR)/test_aux/nested.c
 	$(CC) -o $@ $^
+	chmod +x $@
 
 $(INPROC) : $(TESTDIR)/test_aux/inProc.c
 	$(CC) -o $@ $^
+	chmod +x $@
 
 $(OUTPROC) : $(TESTDIR)/test_aux/outProc.c
 	$(CC) -o $@ $^
+	chmod +x $@
 
 $(MYSHELL) : $(MYSHELL_OBJ) | $(BINDIR)
 	$(CC) -o $@ $^ $(CFLAG)
+	chmod +x $@
 
 $(TEST) : $(TEST_OBJ) | $(BINDIR)
 	$(CC) -o $@ $^ $(CFLAG)
+	chmod +x $@
 
 $(BINDIR) :
 	mkdir $@

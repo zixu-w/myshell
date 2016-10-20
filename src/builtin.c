@@ -6,9 +6,6 @@
 #include "builtin.h"
 #include "signals.h"
 
-extern volatile sig_atomic_t isTimeX;
-extern struct timeval startTime;
-
 const char* keywords[] = {
   "exit",
   "cd",
