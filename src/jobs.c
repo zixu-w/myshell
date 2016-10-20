@@ -79,7 +79,7 @@ int launchJob(Job* j) {
           error(EXIT_FAILURE, errno, "fork");
         else {
           p->pid = pid;
-          usleep(40000);
+          usleep(15000);
           kill(pid, SIGUSR1);
         }
       }
