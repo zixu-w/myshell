@@ -92,12 +92,12 @@ void launchProcess(Process* p, pid_t pgid, int in, int out) {
    process(es) and waits for foreground process(es) to terminate.
    Then it performs cleaning operations.
 
-   \sa launchProcess
-   \sa cleanJob
-
    \param j Pointer to the job to be launched.
 
    \return Exit status.
+
+   \sa launchProcess
+   \sa cleanJob
 */
 int launchJob(Job* j) {
   if (j == NULL)
@@ -204,7 +204,8 @@ int launchJob(Job* j) {
       }
   } else {
     // If the job does not involve piping or it's a timeX job.
-    
+
+    // If is not in timeX job, enable builtin commands.
     if (!isTimeX) {
       // Check if the command is a builtin keyword.
       builtin_func_ptr builtin = map(p->argv[0]);
@@ -212,6 +213,8 @@ int launchJob(Job* j) {
         // Invoke builtin function if is builtin command.
         return builtin(p->argv, j);
     }
+
+    // If in timeX job or is not a builtin command.
     pid = fork();
     if (pid == 0)
       // In child process, call launchProcess.
@@ -234,10 +237,25 @@ int launchJob(Job* j) {
         waitpid(pid, &status, j->bg);
     }
   }
+
+  // Clean up. Collect garbage.
   cleanJob(j);
+
+  // Return the exit status.
   return WEXITSTATUS(status);
 }
 
+/*!
+   \brief Clean up a \link Job job \endlink.
+
+   \details
+   This function releases the memory of job \p j and reset flag \c isTimeX.
+   It releases the the process(es) and then releases the job itself.
+
+   \param j Pointer to the job to be cleaned.
+
+   \sa cleanProcess
+*/
 void cleanJob(Job* j) {
   isTimeX = 0;
   if (j == NULL)
@@ -246,6 +264,15 @@ void cleanJob(Job* j) {
   free(j);
 }
 
+/*!
+   \brief Clean up a \link Process process \endlink.
+
+   \details
+   This function releases the memory of process \p p recursively.
+   It releases the argument vector and then releases the process itself.
+
+   \param p Pointer to the process to be cleaned.
+*/
 void cleanProcess(Process* p) {
   if (p == NULL)
     return;

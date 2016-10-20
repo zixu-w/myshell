@@ -94,7 +94,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 
-<p><a class="el" href="structJob.html" title="Definition of job structure. ">Job</a> and process launching, management, and clean up.  
+<p><a class="el" href="structJob.html" title="Definition of job structure. ">Job</a> and <a class="el" href="structProcess.html">process </a> launching, management, and clean up.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;unistd.h&gt;</code><br />
 <code>#include &lt;stdio.h&gt;</code><br />
@@ -111,12 +111,13 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ac23864d3c2b6be96463a459b9a1fa425"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="jobs_8c.html#ac23864d3c2b6be96463a459b9a1fa425">launchProcess</a> (<a class="el" href="structProcess.html">Process</a> *p, pid_t pgid, int in, int out)</td></tr>
+<tr class="memdesc:ac23864d3c2b6be96463a459b9a1fa425"><td class="mdescLeft">&#160;</td><td class="mdescRight">Launch a <a class="el" href="structProcess.html">process </a>.  <a href="#ac23864d3c2b6be96463a459b9a1fa425">More...</a><br /></td></tr>
 <tr class="separator:ac23864d3c2b6be96463a459b9a1fa425"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a681d12a5794d5d2b905d004f1e3aa734"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="jobs_8c.html#a681d12a5794d5d2b905d004f1e3aa734">launchJob</a> (<a class="el" href="structJob.html">Job</a> *j)</td></tr>
 <tr class="memdesc:a681d12a5794d5d2b905d004f1e3aa734"><td class="mdescLeft">&#160;</td><td class="mdescRight">Launch a <a class="el" href="structJob.html">job </a>.  <a href="#a681d12a5794d5d2b905d004f1e3aa734">More...</a><br /></td></tr>
 <tr class="separator:a681d12a5794d5d2b905d004f1e3aa734"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a39a3def56bdba04d0ae732c45dd652e9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="jobs_8c.html#a39a3def56bdba04d0ae732c45dd652e9">cleanJob</a> (<a class="el" href="structJob.html">Job</a> *j)</td></tr>
-<tr class="memdesc:a39a3def56bdba04d0ae732c45dd652e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clean up a <a class="el" href="structJob.html">job </a>.  <a href="#a39a3def56bdba04d0ae732c45dd652e9">More...</a><br /></td></tr>
+<tr class="memdesc:a39a3def56bdba04d0ae732c45dd652e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clean up <a class="el" href="structJob.html">job </a>.  <a href="#a39a3def56bdba04d0ae732c45dd652e9">More...</a><br /></td></tr>
 <tr class="separator:a39a3def56bdba04d0ae732c45dd652e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a396dc300a8c6a0423c1644ea7d898259"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="jobs_8c.html#a396dc300a8c6a0423c1644ea7d898259">cleanProcess</a> (<a class="el" href="structProcess.html">Process</a> *p)</td></tr>
 <tr class="memdesc:a396dc300a8c6a0423c1644ea7d898259"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clean up a <a class="el" href="structProcess.html">process </a>.  <a href="#a396dc300a8c6a0423c1644ea7d898259">More...</a><br /></td></tr>
@@ -124,15 +125,18 @@ Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a50c62ad3155d8f35ed0510dc79fd4948"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="jobs_8c.html#a50c62ad3155d8f35ed0510dc79fd4948">program_invocation_name</a></td></tr>
-<tr class="separator:a50c62ad3155d8f35ed0510dc79fd4948"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af55713ea8abcbd26434d37f460c7d02a"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="jobs_8c.html#af55713ea8abcbd26434d37f460c7d02a">program_invocation_short_name</a></td></tr>
-<tr class="separator:af55713ea8abcbd26434d37f460c7d02a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a67a2dc81151314983ee32275c6f91a6d"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="jobs_8c.html#a67a2dc81151314983ee32275c6f91a6d">program_invocation_name</a></td></tr>
+<tr class="memdesc:a67a2dc81151314983ee32275c6f91a6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">External variable to set the error prompt.  <a href="#a67a2dc81151314983ee32275c6f91a6d">More...</a><br /></td></tr>
+<tr class="separator:a67a2dc81151314983ee32275c6f91a6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ae998d532f26bc50507f8b10e2c6639"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="jobs_8c.html#a8ae998d532f26bc50507f8b10e2c6639">program_invocation_short_name</a></td></tr>
+<tr class="memdesc:a8ae998d532f26bc50507f8b10e2c6639"><td class="mdescLeft">&#160;</td><td class="mdescRight">External variable to set the error prompt.  <a href="#a8ae998d532f26bc50507f8b10e2c6639">More...</a><br /></td></tr>
+<tr class="separator:a8ae998d532f26bc50507f8b10e2c6639"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a71dd1a7f2ef5314ea4ec19b4fc782333"><td class="memItemLeft" align="right" valign="top">pid_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="jobs_8c.html#a71dd1a7f2ef5314ea4ec19b4fc782333">fpgid</a></td></tr>
+<tr class="memdesc:a71dd1a7f2ef5314ea4ec19b4fc782333"><td class="mdescLeft">&#160;</td><td class="mdescRight">Store foreground process group id.  <a href="#a71dd1a7f2ef5314ea4ec19b4fc782333">More...</a><br /></td></tr>
 <tr class="separator:a71dd1a7f2ef5314ea4ec19b4fc782333"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p><a class="el" href="structJob.html" title="Definition of job structure. ">Job</a> and process launching, management, and clean up. </p>
+<div class="textblock"><p><a class="el" href="structJob.html" title="Definition of job structure. ">Job</a> and <a class="el" href="structProcess.html">process </a> launching, management, and clean up. </p>
 <dl class="section author"><dt>Author</dt><dd>WANG Zixu </dd></dl>
 <dl class="section date"><dt>Date</dt><dd>20/10/2016 </dd></dl>
 </div><h2 class="groupheader">Function Documentation</h2>
@@ -150,7 +154,19 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Clean up a <a class="el" href="structJob.html">job </a>. </p>
+<p>Clean up <a class="el" href="structJob.html">job </a>. </p>
+<p>Clean up a <a class="el" href="structJob.html">job </a>.</p>
+<p>This function takes a job and launches it. It handles background/foreground setting, pipe setting, builtin function looking up before invoking the process(es). It then calls <a class="el" href="jobs_8c.html#ac23864d3c2b6be96463a459b9a1fa425">launchProcess() </a> to launch the process(es) and waits for foreground process(es) to terminate. Then it performs cleaning operations.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="jobs_8c.html#ac23864d3c2b6be96463a459b9a1fa425" title="Launch a process . ">launchProcess</a> </dd>
+<dd>
+<a class="el" href="jobs_8h.html#a0dfc8ddf9a017ac8590f2490e9bf688d" title="Clean up job . ">cleanJob</a></dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">j</td><td>Pointer to the job to be launched.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Exit status. </dd></dl>
 
 </div>
 </div>
@@ -187,6 +203,17 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Launch a <a class="el" href="structJob.html">job </a>. </p>
+<p>This function takes a job and launches it. It handles background/foreground setting, pipe setting, builtin function looking up before invoking the process(es). It then calls <a class="el" href="jobs_8c.html#ac23864d3c2b6be96463a459b9a1fa425">launchProcess() </a> to launch the process(es) and waits for foreground process(es) to terminate. Then it performs cleaning operations.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="jobs_8c.html#ac23864d3c2b6be96463a459b9a1fa425" title="Launch a process . ">launchProcess</a> </dd>
+<dd>
+<a class="el" href="jobs_8c.html#a39a3def56bdba04d0ae732c45dd652e9" title="Clean up job . ">cleanJob</a></dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">j</td><td>Pointer to the job to be launched.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Exit status. </dd></dl>
 
 </div>
 </div>
@@ -226,6 +253,18 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Launch a <a class="el" href="structProcess.html">process </a>. </p>
+<p>This function is called in child processes after <code>fork()</code>. It redirects input/output of process <code>p</code> for piping to <code>in</code> and <code>out</code> if they are not standard input/output. It then sets the process id of <code>p</code> to <code>pgid</code> for background/foreground management. After receiving the signal SIGUSR1, it calls <code>execvp()</code> to invoke the command of the process.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">p</td><td>Pointer to the process to be launched. </td></tr>
+    <tr><td class="paramname">pgid</td><td><a class="el" href="structProcess.html" title="Definition of process structure. ">Process</a> group id to be set to the process. </td></tr>
+    <tr><td class="paramname">in</td><td>Input file descriptor. </td></tr>
+    <tr><td class="paramname">out</td><td>Output file descriptor. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
@@ -239,36 +278,42 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Store foreground process group id. </p>
+
 </div>
 </div>
-<a class="anchor" id="a50c62ad3155d8f35ed0510dc79fd4948"></a>
+<a class="anchor" id="a67a2dc81151314983ee32275c6f91a6d"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">char* program_invocation_name</td>
+          <td class="memname">char * program_invocation_name</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
+<p>External variable to set the error prompt. </p>
+
 </div>
 </div>
-<a class="anchor" id="af55713ea8abcbd26434d37f460c7d02a"></a>
+<a class="anchor" id="a8ae998d532f26bc50507f8b10e2c6639"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">char* program_invocation_short_name</td>
+          <td class="memname">char * program_invocation_short_name</td>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>External variable to set the error prompt. </p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Oct 21 2016 00:28:19 for myshell by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 21 2016 01:38:17 for myshell by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.11
 </small></address>
