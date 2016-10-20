@@ -92,6 +92,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">parse.c File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Parse input command lines into <a class="el" href="structJob.html">jobs </a> .  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;string.h&gt;</code><br />
 <code>#include &lt;stdlib.h&gt;</code><br />
 <code>#include &lt;stdio.h&gt;</code><br />
@@ -99,16 +102,21 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a74377b11b8a0955aced33b8b858f9dd3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structJob.html">Job</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parse_8c.html#a74377b11b8a0955aced33b8b858f9dd3">parse</a> (char *line)</td></tr>
-<tr class="separator:a74377b11b8a0955aced33b8b858f9dd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:affa0cbec8cfa5680e61c250b81dc4868"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structJob.html">Job</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parse_8c.html#affa0cbec8cfa5680e61c250b81dc4868">parse</a> (char *line)</td></tr>
+<tr class="memdesc:affa0cbec8cfa5680e61c250b81dc4868"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse the command line.  <a href="#affa0cbec8cfa5680e61c250b81dc4868">More...</a><br /></td></tr>
+<tr class="separator:affa0cbec8cfa5680e61c250b81dc4868"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="a74377b11b8a0955aced33b8b858f9dd3"></a>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Parse input command lines into <a class="el" href="structJob.html">jobs </a> . </p>
+<dl class="section author"><dt>Author</dt><dd>WANG Zixu </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>20/10/2016 </dd></dl>
+</div><h2 class="groupheader">Function Documentation</h2>
+<a class="anchor" id="affa0cbec8cfa5680e61c250b81dc4868"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structJob.html">Job</a>* parse </td>
+          <td class="memname"><a class="el" href="structJob.html">Job</a> * parse </td>
           <td>(</td>
           <td class="paramtype">char *&#160;</td>
           <td class="paramname"><em>line</em></td><td>)</td>
@@ -117,12 +125,22 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Parse the command line. </p>
+<p>This function parses the input command line and generates a corresponding job if it's valid. It uses a finite state machine to parse commands and special grammer token such as '|' for piping and '&amp;' for background.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">line</td><td>String of the input command line read from readline.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Pointer to the generated job. NULL if the input is illegal. </dd></dl>
+
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Oct 21 2016 02:02:54 for myshell by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 21 2016 02:34:37 for myshell by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.11
 </small></address>

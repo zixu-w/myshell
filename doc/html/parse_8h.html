@@ -93,6 +93,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">parse.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Header for parsing utilities.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="jobs_8h_source.html">jobs.h</a>&quot;</code><br />
 </div>
 <p><a href="parse_8h_source.html">Go to the source code of this file.</a></p>
@@ -100,16 +103,23 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:a2c10f743eb5af36f2376f69d5039fba4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parse_8h.html#a2c10f743eb5af36f2376f69d5039fba4">TOK_SIZE</a>&#160;&#160;&#160;30</td></tr>
+<tr class="memdesc:a2c10f743eb5af36f2376f69d5039fba4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Marco definition for token vector size.  <a href="#a2c10f743eb5af36f2376f69d5039fba4">More...</a><br /></td></tr>
 <tr class="separator:a2c10f743eb5af36f2376f69d5039fba4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8269503d8eba9aea85c30552c6ce2a01"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parse_8h.html#a8269503d8eba9aea85c30552c6ce2a01">ARG_SIZE</a>&#160;&#160;&#160;30</td></tr>
+<tr class="memdesc:a8269503d8eba9aea85c30552c6ce2a01"><td class="mdescLeft">&#160;</td><td class="mdescRight">Marco definition for argument length.  <a href="#a8269503d8eba9aea85c30552c6ce2a01">More...</a><br /></td></tr>
 <tr class="separator:a8269503d8eba9aea85c30552c6ce2a01"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:add73364eb3ea07f4136f1b4bf5434f5b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structJob.html">Job</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parse_8h.html#add73364eb3ea07f4136f1b4bf5434f5b">parse</a> (char *)</td></tr>
+<tr class="memdesc:add73364eb3ea07f4136f1b4bf5434f5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse the command line.  <a href="#add73364eb3ea07f4136f1b4bf5434f5b">More...</a><br /></td></tr>
 <tr class="separator:add73364eb3ea07f4136f1b4bf5434f5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Macro Definition Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Header for parsing utilities. </p>
+<dl class="section author"><dt>Author</dt><dd>WANG Zixu </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>20/10/2016 </dd></dl>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a class="anchor" id="a8269503d8eba9aea85c30552c6ce2a01"></a>
 <div class="memitem">
 <div class="memproto">
@@ -119,6 +129,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Marco definition for argument length. </p>
 
 </div>
 </div>
@@ -132,6 +144,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Marco definition for token vector size. </p>
+
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
@@ -143,18 +157,28 @@ Functions</h2></td></tr>
           <td class="memname"><a class="el" href="structJob.html">Job</a>* parse </td>
           <td>(</td>
           <td class="paramtype">char *&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramname"><em>line</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Parse the command line. </p>
+<p>This function parses the input command line and generates a corresponding job if it's valid. It uses a finite state machine to parse commands and special grammer token such as '|' for piping and '&amp;' for background.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">line</td><td>String of the input command line read from readline.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Pointer to the generated job. NULL if the input is illegal. </dd></dl>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Oct 21 2016 02:02:54 for myshell by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 21 2016 02:34:37 for myshell by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.11
 </small></address>
