@@ -29,7 +29,7 @@ void cldSighandler(int signum, siginfo_t* sig, void* context) {
       sprintf(filename, "/proc/%d/stat", pid);
       FILE* file = fopen(filename, "r");
       if (file) {
-        fgets(line, 1024, file);
+        line = fgets(line, 1024, file);
         char* tok = strtok(line, " ");
         size_t i = 1;
         while (tok != NULL) {
@@ -42,8 +42,10 @@ void cldSighandler(int signum, siginfo_t* sig, void* context) {
           }
           if (i == 14)
             sscanf(tok, "%Lf", &utime);
-          if (i == 15)
+          if (i == 15) {
             sscanf(tok, "%Lf", &stime);
+            break;
+          }
           i++;
           tok = strtok(NULL, " ");
         }
@@ -100,6 +102,7 @@ void registerSighandler() {
   sigaction(SIGCHLD, NULL, &sa_cld);
   sa_cld.sa_flags |= SA_SIGINFO;
   sa_cld.sa_flags |= SA_RESTART;
+  sa_cld.sa_flags |= SA_NOCLDSTOP;
   sa_cld.sa_sigaction = cldSighandler;
   sigaction(SIGCHLD, &sa_cld, NULL);
 
