@@ -18,11 +18,11 @@
    This function parses the input command line and generates a corresponding
    job if it's valid.
    It uses a finite state machine to parse commands and special grammer token
-   such as '|' for piping and '&' for background.
+   such as \c '|' for piping and \c '&' for background.
 
    \param line String of the input command line read from readline.
 
-   \return Pointer to the generated job. NULL if the input is illegal.
+   \return Pointer to the generated job. \c NULL if the input is illegal.
 */
 Job* parse(char* line) {
   // If the input is empty, return NULL.
