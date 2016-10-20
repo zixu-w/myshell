@@ -6,7 +6,7 @@ MYSHELL_OBJ := $(MYSHELL_SRC:.c=.o)
 TESTDIR := test
 TEST_SRC := $(wildcard $(TESTDIR)/*.c)
 TEST_OBJ := $(TEST_SRC:.c=.o)
-CFLAG := -Wall -O3
+CFLAG := -Wall -O3 -D NDEBUG
 
 MYSHELL := $(BINDIR)/myshell
 TEST := $(BINDIR)/test
