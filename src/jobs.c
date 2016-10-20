@@ -97,9 +97,11 @@ int launchJob(Job* j) {
           waitpid(p->pid, &status, j->bg);
       }
   } else {
-    builtin_func_ptr builtin = map(p->argv[0]);
-    if (builtin != NULL)
-      return builtin(p->argv, j);
+    if (!isTimeX) {
+      builtin_func_ptr builtin = map(p->argv[0]);
+      if (builtin != NULL)
+        return builtin(p->argv, j);
+    }
     pid = fork();
     if (pid == 0)
       launchProcess(p, j->pgid, j->stdin, j->stdout);
