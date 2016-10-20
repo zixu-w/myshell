@@ -1,4 +1,4 @@
-.PHONY : fclean clean test run testrun
+.PHONY : fclean clean test run testrun doc
 
 BINDIR := bin
 MYSHELL_SRC := $(wildcard src/*.c)
@@ -66,3 +66,6 @@ clean :
 
 fclean : clean
 	$(RM) $(MYSHELL) $(TEST)
+
+doc :
+	doxygen .doxyconfig
