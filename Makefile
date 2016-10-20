@@ -23,24 +23,31 @@ aux : $(AUX)
 
 $(LOOPF) : $(TESTDIR)/test_aux/loopever.c
 	$(CC) -o $@ $^ -D FOREVER=0
+	chmod +x $@
 
 $(FOREVER) : $(TESTDIR)/test_aux/loopever.c
 	$(CC) -o $@ $^ -D FOREVER=1
+	chmod +x $@
 
 $(NESTED) : $(TESTDIR)/test_aux/nested.c
 	$(CC) -o $@ $^
+	chmod +x $@
 
 $(INPROC) : $(TESTDIR)/test_aux/inProc.c
 	$(CC) -o $@ $^
+	chmod +x $@
 
 $(OUTPROC) : $(TESTDIR)/test_aux/outProc.c
 	$(CC) -o $@ $^
+	chmod +x $@
 
 $(MYSHELL) : $(MYSHELL_OBJ) | $(BINDIR)
 	$(CC) -o $@ $^ $(CFLAG)
+	chmod +x $@
 
 $(TEST) : $(TEST_OBJ) | $(BINDIR)
 	$(CC) -o $@ $^ $(CFLAG)
+	chmod +x $@
 
 $(BINDIR) :
 	mkdir $@
@@ -49,11 +56,9 @@ $(BINDIR) :
 	$(CC) -c -o $@ $^ $(CFLAG)
 
 run : $(MYSHELL)
-	chmod +x $^
 	./$(MYSHELL)
 
 testrun: test aux myshell | $(TESTDIR)/test.in
-	chmod +x $^
 	./$(TEST)
 
 clean :
