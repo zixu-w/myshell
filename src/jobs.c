@@ -114,10 +114,6 @@ int launchJob(Job* j) {
         waitid(P_PID, pid, NULL, WEXITED | WNOWAIT);
       else
         waitpid(pid, &status, j->bg);
-      if (!j->bg) {
-        cleanJob(j);
-        return WEXITSTATUS(status);
-      }
     }
   }
   cleanJob(j);
