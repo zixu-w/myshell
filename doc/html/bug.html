@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.11"/>
-<title>myshell: Globals</title>
+<title>myshell: Bug List</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -40,9 +40,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
-      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li class="current"><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
-      <li class="current"><a href="files.html"><span>Files</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -61,22 +61,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       </li>
     </ul>
   </div>
-  <div id="navrow2" class="tabs2">
-    <ul class="tablist">
-      <li><a href="files.html"><span>File&#160;List</span></a></li>
-      <li class="current"><a href="globals.html"><span>Globals</span></a></li>
-    </ul>
-  </div>
-  <div id="navrow3" class="tabs2">
-    <ul class="tablist">
-      <li><a href="globals.html"><span>All</span></a></li>
-      <li><a href="globals_func.html"><span>Functions</span></a></li>
-      <li><a href="globals_vars.html"><span>Variables</span></a></li>
-      <li class="current"><a href="globals_type.html"><span>Typedefs</span></a></li>
-      <li><a href="globals_defs.html"><span>Macros</span></a></li>
-    </ul>
-  </div>
-</div><!-- top -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -91,19 +75,17 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle">
+<div class="title">Bug List </div>  </div>
+</div><!--header-->
 <div class="contents">
-&#160;<ul>
-<li>builtin_func_ptr
-: <a class="el" href="builtin_8h.html#a16c3ee62e95ac529a3a8d88fa286c7ab">builtin.h</a>
-</li>
-<li>Job
-: <a class="el" href="jobs_8h.html#a43f474f2604b8d14220eb351aae2b33e">jobs.h</a>
-</li>
-<li>Process
-: <a class="el" href="jobs_8h.html#a095422aaedd60f678ef080ec9462ebd4">jobs.h</a>
-</li>
-</ul>
-</div><!-- contents -->
+<div class="textblock"><dl class="reflist">
+<dt><a class="anchor" id="_bug000001"></a>Global <a class="el" href="signals_8c.html#aa0422f5e58c32f66978144b8130982b7">cldSighandler</a>  (int signum, siginfo_t *sig, void *context)</dt>
+<dd>The handler is not thread-safe. The processing time may be too long that there may be another <code>SIGCHLD</code> signal arriving when the handler is handling a previous <code>SIGCHLD</code> signal. This may lead to defunct processes and incomplete output. </dd>
+</dl>
+</div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated on Fri Oct 21 2016 03:18:28 for myshell by &#160;<a href="http://www.doxygen.org/index.html">

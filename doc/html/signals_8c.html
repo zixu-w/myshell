@@ -40,6 +40,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -92,6 +93,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">signals.c File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Register and handle signals.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;signal.h&gt;</code><br />
 <code>#include &lt;unistd.h&gt;</code><br />
 <code>#include &lt;stdio.h&gt;</code><br />
@@ -103,15 +107,23 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a23a49274c94207fcc83ff281a9a7eaf1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signals_8c.html#a23a49274c94207fcc83ff281a9a7eaf1">intSighandler</a> (int signum)</td></tr>
+<tr class="memdesc:a23a49274c94207fcc83ff281a9a7eaf1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dumb <code>SIGINT</code> handler.  <a href="#a23a49274c94207fcc83ff281a9a7eaf1">More...</a><br /></td></tr>
 <tr class="separator:a23a49274c94207fcc83ff281a9a7eaf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa0422f5e58c32f66978144b8130982b7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signals_8c.html#aa0422f5e58c32f66978144b8130982b7">cldSighandler</a> (int signum, siginfo_t *sig, void *context)</td></tr>
+<tr class="memdesc:aa0422f5e58c32f66978144b8130982b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle <code>SIGCHLD</code> from terminated child processes.  <a href="#aa0422f5e58c32f66978144b8130982b7">More...</a><br /></td></tr>
 <tr class="separator:aa0422f5e58c32f66978144b8130982b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e7a73853100f7da17a7c427fba872f1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signals_8c.html#a1e7a73853100f7da17a7c427fba872f1">sigUsr1handler</a> (int signum)</td></tr>
+<tr class="memdesc:a1e7a73853100f7da17a7c427fba872f1"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>SIGUSR1</code> handler.  <a href="#a1e7a73853100f7da17a7c427fba872f1">More...</a><br /></td></tr>
 <tr class="separator:a1e7a73853100f7da17a7c427fba872f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1f109deb5ff3016dac7c4065501744e8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="signals_8c.html#a1f109deb5ff3016dac7c4065501744e8">registerSighandler</a> ()</td></tr>
+<tr class="memdesc:a1f109deb5ff3016dac7c4065501744e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register signal handlers.  <a href="#a1f109deb5ff3016dac7c4065501744e8">More...</a><br /></td></tr>
 <tr class="separator:a1f109deb5ff3016dac7c4065501744e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Register and handle signals. </p>
+<dl class="section author"><dt>Author</dt><dd>WANG Zixu </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>20/10/2016 </dd></dl>
+</div><h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="aa0422f5e58c32f66978144b8130982b7"></a>
 <div class="memitem">
 <div class="memproto">
@@ -142,6 +154,18 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Handle <code>SIGCHLD</code> from terminated child processes. </p>
+<p>This signal handler catches <code>SIGCHLD</code> and handles cases of <code>timeX</code> processes and background processes. For <code>timeX</code> processes, it calculates the real running time of the processes, reads <code>/proc/</code> &lt;pid&gt;/stat file to get information, prints the information, and then releases the processes. For background processes, it reads command name from <code>/proc/</code> &lt;pid&gt;/comm file, informs done, and releases the processes.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">signum</td><td>Signal number. </td></tr>
+    <tr><td class="paramname">sig</td><td>Signal information. </td></tr>
+    <tr><td class="paramname">context</td><td>Context pointer.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000001">Bug:</a></b></dt><dd>The handler is not thread-safe. The processing time may be too long that there may be another <code>SIGCHLD</code> signal arriving when the handler is handling a previous <code>SIGCHLD</code> signal. This may lead to defunct processes and incomplete output. </dd></dl>
+
 </div>
 </div>
 <a class="anchor" id="a23a49274c94207fcc83ff281a9a7eaf1"></a>
@@ -157,6 +181,14 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Dumb <code>SIGINT</code> handler. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">signum</td><td>Signal number. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -174,6 +206,9 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Register signal handlers. </p>
+<p>This function registers required signal handlers. </p>
+
 </div>
 </div>
 <a class="anchor" id="a1e7a73853100f7da17a7c427fba872f1"></a>
@@ -190,12 +225,21 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p><code>SIGUSR1</code> handler. </p>
+<p>This signal handler catches <code>SIGUSR1</code> and set flag sigur1Received upon receiving.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">signum</td><td>Signal number. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Oct 21 2016 02:44:14 for myshell by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 21 2016 03:18:28 for myshell by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.11
 </small></address>

@@ -2,6 +2,7 @@ var searchData=
 [
   ['bg',['bg',['../structJob.html#ac451272349a79260ac7e0bd8c935b17a',1,'Job']]],
   ['buffer_5fsize',['BUFFER_SIZE',['../readline_8h.html#a6b20d41d6252e9871430c242cb1a56e7',1,'readline.h']]],
+  ['bug_20list',['Bug List',['../bug.html',1,'']]],
   ['builtin_2ec',['builtin.c',['../builtin_8c.html',1,'']]],
   ['builtin_2eh',['builtin.h',['../builtin_8h.html',1,'']]],
   ['builtin_5fcd',['builtin_cd',['../builtin_8c.html#a526a722ca65fb0c78cbabfc950e302e5',1,'builtin_cd(char **argv, Job *j):&#160;builtin.c'],['../builtin_8h.html#a017f0e5b6a861d96e669f24a2a7509a0',1,'builtin_cd(char **, Job *):&#160;builtin.c']]],
