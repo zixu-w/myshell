@@ -23,45 +23,26 @@
 typedef int(*builtin_func_ptr)(char**, Job*);
 
 /*!
-   \fn int builtin_exit(char** argv, Job* j)
+   \fn int builtin_exit(char**, Job*)
    \brief Builtin implementation for \c exit.
-
-   \param argv Command argument vector.
-   \param j Pointer to the current job.
-
-   \return Execution status.
 */
 int builtin_exit(char**, Job*);
 
 /*!
-   \fn int builtin_cd(char** argv, Job* j)
+   \fn int builtin_cd(char**, Job*)
    \brief Builtin implementation for \c cd.
-
-   \param argv Command argument vector.
-   \param j Pointer to the current job.
-
-   \return Execution status.
 */
 int builtin_cd(char**, Job*);
 
 /*!
-   \fn int builtin_timeX(char** argv, Job* j)
+   \fn int builtin_timeX(char**, Job*)
    \brief Builtin implementation for \c timeX.
-
-   \param argv Command argument vector.
-   \param j Pointer to the current job.
-
-   \return Execution status.
 */
 int builtin_timeX(char**, Job*);
 
 /*!
-   \fn builtin_func_ptr map(const char* cmd)
+   \fn builtin_func_ptr map(const char*)
    \brief Map keywords to corresponding functions.
-
-   \param cmd The command string of the command line.
-
-   \return The corresponding function pointer if \param cmd is a builtin keyword. Otherwise \c NULL.
 */
 builtin_func_ptr map(const char*);
 

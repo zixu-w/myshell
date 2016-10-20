@@ -4,6 +4,7 @@
    \author WANG Zixu
    \date 20/10/2016
 
+   \details
    Built-in functions such as 'exit' and 'timeX' are defined here and
    referenced as function pointers.
 */
@@ -20,6 +21,7 @@
    \var const char* keywords[]
    \brief Keywords for builtin functions.
 
+   \details
    Define keywords for search and mapping builtin functions.
 */
 const char* keywords[] = {
@@ -33,6 +35,7 @@ const char* keywords[] = {
    \var builtin_func_ptr builtins[]
    \brief Function pointers for builtin functions.
 
+   \details
    Store function pointers for mapping.
 */
 builtin_func_ptr builtins[] = {
@@ -44,18 +47,19 @@ builtin_func_ptr builtins[] = {
 /*!
    \brief Map keywords to corresponding functions.
 
-   This function takes the command name \param cmd and searches for builtin keyword.
-   If \param cmd is found in the keywords, the corresponding function pointer in \c builtins[]
+   \details
+   This function takes the command name \p cmd and searches for builtin keyword.
+   If \p cmd is found in the keywords, the corresponding function pointer in \c builtins[]
    is returned. Otherwise, \c NULL is returned.
 
    \param cmd The command string of the command line.
 
-   \return The corresponding function pointer if \param cmd is a builtin keyword. Otherwise \c NULL.
+   \return The corresponding function pointer if \p cmd is a builtin keyword. Otherwise \c NULL.
 
    \code
    builtin_func_ptr myBuiltin = map(cmd);
    if (myBuiltin != NULL) {
-     myBuiltin(argv, job);// call builtin.
+     myBuiltin(argv, job); // call builtin.
    }
    \endcode
 */
@@ -70,6 +74,7 @@ builtin_func_ptr map(const char* cmd) {
 /*!
    \brief Builtin implementation for \c cd.
 
+   \details
    Implementation of builtin function \c cd for changing directory.
 
    \param argv Command argument vector.
@@ -96,9 +101,9 @@ int builtin_cd(char** argv, Job* j) {
 }
 
 /*!
-   \fn int builtin_exit(char** argv, Job* j)
    \brief Builtin implementation for \c exit.
 
+   \details
    Implementation of builtin function \c exit for exiting the shell.
 
    \param argv Command argument vector.
@@ -119,9 +124,9 @@ int builtin_exit(char** argv, Job* j) {
 }
 
 /*!
-   \fn int builtin_timeX(char** argv, Job* j)
    \brief Builtin implementation for \c timeX.
 
+   \details
    Implementation of builtin function \c timeX for timing a job.
    This function checks for eligibility of running timeX, and generates a new job
    from the rest part of the command line. The newly generated job is launched with a timer.
