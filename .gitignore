@@ -3,3 +3,5 @@ bin/
 *.gch
 *.swp
 test/test.out
+.idea/
+cmake-build-debug/
