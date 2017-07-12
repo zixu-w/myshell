@@ -67,7 +67,7 @@ void launchProcess(Process* p, pid_t pgid, int in, int out) {
 
   // Set the group process id.
   // Group process id is set to pid of p if pgid equals to 0.
-  // This way we can deal with background processes seperately.
+  // This way we can deal with background processes separately.
   setpgid(0, pgid);
 
   // Block untill SIGUSR1 has been received.
