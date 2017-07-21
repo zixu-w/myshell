@@ -1,12 +1,14 @@
 .PHONY : fclean clean test run testrun doc all
 
 BINDIR := bin
+OBJDIR := obj
 MYSHELL_SRC := $(wildcard src/*.c)
-MYSHELL_OBJ := $(MYSHELL_SRC:.c=.o)
+MYSHELL_OBJ := $(MYSHELL_SRC:%.c=$(OBJDIR)/%.o)
 TESTDIR := test
 TEST_SRC := $(wildcard $(TESTDIR)/*.c)
-TEST_OBJ := $(TEST_SRC:.c=.o)
-CFLAG := -Wall -O3 -D NDEBUG
+TEST_OBJ := $(TEST_SRC:%.c=$(OBJDIR)/%.o)
+CFLAGS := -std=c99 -Wall -O3 -D NDEBUG
+LFLAGS := -Wall
 
 MYSHELL := $(BINDIR)/myshell
 TEST := $(BINDIR)/test
@@ -44,18 +46,24 @@ $(OUTPROC) : $(TESTDIR)/test_aux/outProc.c
 	chmod +x $@
 
 $(MYSHELL) : $(MYSHELL_OBJ) | $(BINDIR)
-	$(CC) -o $@ $^ $(CFLAG)
+	$(LINKER) -o $@ $^ $(LFLAGS)
 	chmod +x $@
 
 $(TEST) : $(TEST_OBJ) | $(BINDIR)
-	$(CC) -o $@ $^ $(CFLAG)
+	$(LINKER) -o $@ $^ $(LFLAGS)
 	chmod +x $@
 
 $(BINDIR) :
 	mkdir $@
 
-%.o : %.c
-	$(CC) -c -o $@ $^ $(CFLAG)
+$(OBJDIR) :
+	mkdir $@
+
+$(MYSHELL_OBJ) : $(MYSHELL_SRC) | $(OBJDIR)
+	$(CC) -c -o $@ $^ $(CFLAGS)
+
+$(TEST_OBJ) : $(TEST_SRC) | $(OBJDIR)
+	$(CC) -c -o $@ $^ $(CFLAGS)
 
 run : $(MYSHELL)
 	./$(MYSHELL)
